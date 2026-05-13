@@ -1,0 +1,1007 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Needs vs Wants Competition</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+
+<style>
+/* =========================
+GLOBAL RESET & VARIABLES
+========================= */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --primary-font: 'Poppins', Arial, sans-serif;
+    --bg-color: #f0f4f8;
+    --card-bg: #ffffff;
+    --text-main: #333333;
+    --shadow-sm: 0 4px 6px rgba(0,0,0,0.05);
+    --shadow-md: 0 8px 15px rgba(0,0,0,0.1);
+}
+
+body {
+    font-family: var(--primary-font);
+    background: var(--bg-color);
+    overflow: hidden;
+    color: var(--text-main);
+}
+
+/* =========================
+HOME PAGE & BACKGROUNDS
+========================= */
+#homePage {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999999;
+    overflow: hidden;
+}
+
+.home-bg-layer {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -1;
+}
+
+#homeVideoBg {
+    display: none; /* Hidden by default */
+}
+
+#homeImageBg {
+    /* Default Background */
+    background: linear-gradient(rgba(15, 32, 39, 0.7), rgba(32, 58, 67, 0.7), rgba(44, 83, 100, 0.7)),
+                url('https://images.unsplash.com/photo-1503676260728-1c00da094a0b?q=80&w=1600');
+    background-size: cover;
+    background-position: center;
+}
+
+#homeCard {
+    width: 90%;
+    max-width: 800px;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-radius: 24px;
+    padding: 60px 40px;
+    text-align: center;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    box-shadow: var(--shadow-md);
+    color: white;
+    z-index: 10; 
+}
+
+#homeTitle {
+    font-size: 64px;
+    font-weight: 800;
+    margin-bottom: 10px;
+    text-shadow: 2px 2px 8px rgba(0,0,0,0.5);
+}
+
+#homeSubtitle {
+    font-size: 24px;
+    font-weight: 400;
+    margin-bottom: 40px;
+    text-shadow: 1px 1px 5px rgba(0,0,0,0.5);
+}
+
+#enterBtn {
+    padding: 16px 50px;
+    font-size: 22px;
+    font-family: var(--primary-font);
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    font-weight: 800;
+    background: #ffcc00;
+    color: #333;
+    box-shadow: 0 4px 15px rgba(255, 204, 0, 0.4);
+    transition: all 0.3s ease;
+}
+
+#enterBtn:hover {
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 8px 20px rgba(255, 204, 0, 0.6);
+}
+
+/* =========================
+GAME PAGE & HEADER
+========================= */
+#gamePage { display: none; }
+
+header {
+    height: 75px;
+    background: var(--card-bg);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    box-shadow: var(--shadow-sm);
+    position: relative;
+    z-index: 10;
+}
+
+.leftHeader {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+#homeBtn {
+    padding: 8px 12px;
+    font-size: 20px;
+    background: #f0f4f8;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+#homeBtn:hover { background: #e2e8f0; }
+
+#gameTitle {
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--text-main);
+}
+
+/* =========================
+BIG TIMER
+========================= */
+#topTimer {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 12px;
+    font-size: 32px;
+    font-weight: 800;
+    background: #333;
+    color: #ffcc00;
+    padding: 5px 30px;
+    border-radius: 30px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    min-width: 140px;
+    text-align: center;
+    letter-spacing: 2px;
+}
+
+.controls {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.controls button, .controls select, .controls input {
+    padding: 8px 12px;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: var(--primary-font);
+    font-weight: 600;
+    font-size: 13px;
+    background: white;
+    transition: 0.2s;
+}
+
+.controls button:hover { background: #f8fafc; transform: translateY(-1px); }
+
+#startBtn { background: #4ade80; color: white; border: none; }
+#startBtn:hover { background: #22c55e; }
+#stopBtn { background: #f87171; color: white; border: none; }
+#stopBtn:hover { background: #ef4444; }
+#viewBtn { background: #a855f7; color: white; border: none; }
+#viewBtn:hover { background: #9333ea; }
+#checkBtn { background: #3b82f6; color: white; border: none; }
+#checkBtn:hover { background: #2563eb; }
+
+/* =========================
+TEAMS AREA
+========================= */
+#teamsContainer {
+    display: flex;
+    width: 100%;
+    height: calc(100vh - 75px);
+    gap: 15px;
+    padding: 15px;
+    overflow-x: auto;
+}
+
+.team {
+    flex: 1;
+    min-width: 280px; 
+    background: var(--card-bg);
+    border-radius: 16px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid #e2e8f0;
+}
+
+.teamHeader {
+    text-align: center;
+    padding: 12px;
+    color: white;
+}
+
+.teamTitle {
+    font-size: 20px;
+    font-weight: 800;
+}
+
+.score {
+    font-size: 14px;
+    font-weight: 600;
+    margin-top: 4px;
+    background: rgba(255,255,255,0.2);
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 10px;
+}
+
+/* =========================
+DROP BOXES (Side by Side)
+========================= */
+.boxContainer {
+    display: flex;
+    flex-direction: row; 
+    gap: 10px;
+    padding: 10px;
+    flex: 1;
+}
+
+.dropBox {
+    flex: 1;
+    border-radius: 12px;
+    padding: 10px;
+    overflow-y: auto;
+    background-color: #f8fafc; 
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    border: 2px dashed #cbd5e1;
+    position: relative;
+    transition: 0.2s ease;
+}
+
+.dropBox.drag-over {
+    background-color: #e2e8f0;
+    border-color: #94a3b8;
+}
+
+.dropBox h2 {
+    text-align: center;
+    margin-bottom: 10px;
+    color: #333; 
+    background: rgba(255, 255, 255, 0.8); 
+    padding: 5px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+/* =========================
+ITEMS & POOL
+========================= */
+.itemGrid {
+    display: none; 
+    grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
+    gap: 8px;
+    min-height: 50px; 
+}
+
+.itemPool {
+    height: 180px;
+    background: #f1f5f9;
+    padding: 10px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
+    gap: 8px;
+    overflow-y: auto;
+    border-top: 2px solid #e2e8f0;
+}
+
+.itemPool.drag-over { background: #e2e8f0; }
+
+.item {
+    background: white;
+    border-radius: 10px;
+    padding: 8px 4px;
+    text-align: center;
+    cursor: grab;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+    transition: transform 0.1s, box-shadow 0.1s;
+    user-select: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.item:active { cursor: grabbing; transform: scale(0.95); }
+.item:hover { transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+.item img { width: 40px; height: 40px; object-fit: contain; }
+.item span {
+    display: block;
+    margin-top: 6px;
+    font-size: 11px;
+    font-weight: 600;
+    color: #475569;
+    line-height: 1.1;
+}
+
+/* =========================
+RESULTS
+========================= */
+.correct { outline: 3px solid #4ade80; outline-offset: -2px; background: #f0fdf4; }
+.wrong { outline: 3px solid #f87171; outline-offset: -2px; opacity: 0.7; background: #fef2f2; }
+
+/* =========================
+SETTINGS PANEL
+========================= */
+#settingsPanel {
+    position: fixed;
+    right: -450px;
+    top: 0;
+    width: 400px;
+    max-width: 100%;
+    height: 100vh;
+    background: white;
+    transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow-y: auto;
+    padding: 30px;
+    box-shadow: -10px 0 30px rgba(0,0,0,0.1);
+    z-index: 999999;
+}
+
+#settingsPanel.active { right: 0; }
+
+#closeSettings {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 36px;
+    height: 36px;
+    border: none;
+    border-radius: 50%;
+    background: #f1f5f9;
+    color: #333;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+#closeSettings:hover { background: #e2e8f0; color: red; }
+
+.settingGroup { margin-bottom: 25px; }
+.settingGroup h3 { margin-bottom: 12px; font-size: 15px; color: #475569; border-bottom: 2px solid #f1f5f9; padding-bottom: 5px; }
+.settingGroup input, .settingGroup select, .settingGroup button {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    font-family: var(--primary-font);
+    font-size: 13px;
+}
+.settingGroup button { cursor: pointer; font-weight: 600; background: #f8fafc; }
+.settingGroup button:hover { background: #e2e8f0; }
+
+.font-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+}
+.font-grid select, .font-grid input { margin-bottom: 0; }
+
+#saveSettingsBtn { background: #3b82f6; color: white; border: none; padding: 12px; font-size: 14px;}
+#saveSettingsBtn:hover { background: #2563eb; }
+
+.itemEditor { border: 1px solid #e2e8f0; padding: 15px; border-radius: 12px; margin-bottom: 15px; background: #f8fafc; }
+.itemEditor img { width: 50px; height: 50px; object-fit: contain; display: block; margin: 0 auto 10px auto; border-radius: 8px; background: white; padding: 5px; box-shadow: var(--shadow-sm); }
+.deleteItemBtn { background: #fee2e2 !important; color: #ef4444 !important; border: 1px solid #fca5a5 !important; }
+
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 4px; }
+::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+</style>
+</head>
+<body>
+
+<!-- HOME PAGE -->
+<div id="homePage">
+    <!-- Video Background Layer -->
+    <video id="homeVideoBg" class="home-bg-layer" autoplay loop muted playsinline></video>
+    <!-- Image Background Layer -->
+    <div id="homeImageBg" class="home-bg-layer"></div>
+
+    <div id="homeCard">
+        <h1 id="homeTitle">Needs vs Wants</h1>
+        <p id="homeSubtitle">Fun Classroom Sorting Competition</p>
+        <button id="enterBtn">START GAME</button>
+    </div>
+</div>
+
+<!-- GAME PAGE -->
+<div id="gamePage">
+    <header>
+        <div class="leftHeader">
+            <button id="homeBtn">🏠</button>
+            <h1 id="gameTitle">Needs vs Wants</h1>
+        </div>
+        
+        <div id="topTimer">01:00</div>
+        
+        <div class="controls">
+            <select id="teamCount" title="Number of Teams">
+                <option>1</option><option>2</option><option>3</option>
+                <option>4</option><option>5</option><option selected>6</option>
+            </select>
+            <input type="number" id="timerInput" value="60" style="width:60px;" title="Seconds">
+            <button id="startBtn">START</button>
+            <button id="stopBtn">STOP</button>
+            <button id="viewBtn">VIEW</button>
+            <button id="checkBtn">CHECK</button>
+            <button id="resetBtn">RESET</button>
+            <button id="settingsBtn">⚙️</button>
+        </div>
+    </header>
+
+    <div id="teamsContainer"></div>
+</div>
+
+<!-- SETTINGS PANEL -->
+<div id="settingsPanel">
+    <button id="closeSettings">✕</button>
+    
+    <div class="settingGroup">
+        <button id="saveSettingsBtn">SAVE SETTINGS & APPLY</button>
+    </div>
+
+    <!-- HOMEPAGE BACKGROUND MEDIA -->
+    <div class="settingGroup">
+        <h3>Homepage Background</h3>
+        <p style="font-size:11px; margin-bottom:5px; color:#666;">Upload an image or a video loop for the homepage background.</p>
+        <input type="file" id="homeMediaUpload" accept="image/*,video/*">
+    </div>
+
+    <!-- FONT GROUP 1: Homepage -->
+    <div class="settingGroup">
+        <h3>1. Homepage Texts & Fonts</h3>
+        <input type="text" id="homeTitleInput" placeholder="Homepage Title">
+        <input type="text" id="homeSubtitleInput" placeholder="Homepage Subtitle">
+        <div class="font-grid">
+            <select id="homeFontFamily">
+                <option value="'Poppins', Arial">Poppins</option>
+                <option value="Arial">Arial</option>
+                <option value="'Century Gothic', sans-serif">Century Gothic</option>
+                <option value="'Comic Sans MS', cursive">Comic Sans MS</option>
+                <option value="Verdana">Verdana</option>
+            </select>
+            <input type="color" id="homeFontColor" value="#ffffff">
+            <input type="number" id="homeTitleSize" value="64" placeholder="Title Size">
+            <input type="number" id="homeSubtitleSize" value="24" placeholder="Subtitle Size">
+        </div>
+    </div>
+
+    <!-- FONT GROUP 2: Game Title -->
+    <div class="settingGroup">
+        <h3>2. Game Title Texts & Fonts</h3>
+        <input type="text" id="gameTitleInput" placeholder="Game Title">
+        <div class="font-grid">
+            <select id="gameTitleFont">
+                <option value="'Poppins', Arial">Poppins</option>
+                <option value="Arial">Arial</option>
+                <option value="'Century Gothic', sans-serif">Century Gothic</option>
+                <option value="'Comic Sans MS', cursive">Comic Sans MS</option>
+                <option value="Verdana">Verdana</option>
+            </select>
+            <input type="color" id="gameTitleColor" value="#333333">
+            <input type="number" id="gameTitleSize" value="28" placeholder="Size">
+        </div>
+    </div>
+
+    <!-- FONT GROUP 3: General Text -->
+    <div class="settingGroup">
+        <h3>3. General Game Fonts</h3>
+        <p style="font-size:11px; margin-bottom:5px; color:#666;">Applies to team names, scores, box titles, and item names.</p>
+        <div class="font-grid">
+            <select id="fontFamily">
+                <option value="'Poppins', Arial">Poppins</option>
+                <option value="Arial">Arial</option>
+                <option value="'Century Gothic', sans-serif">Century Gothic</option>
+                <option value="'Comic Sans MS', cursive">Comic Sans MS</option>
+                <option value="Verdana">Verdana</option>
+            </select>
+            <input type="color" id="fontColor" value="#333333">
+            <input type="number" id="fontSize" value="14" placeholder="Size">
+        </div>
+    </div>
+
+    <!-- BOX SETTINGS -->
+    <div class="settingGroup">
+        <h3>Box Names & Backgrounds</h3>
+        <input type="text" id="needsTextInput" placeholder="Needs Box Name (e.g. NEEDS)">
+        <label style="font-size: 11px;">Needs Box Background Image:</label>
+        <input type="file" id="needsBgUpload" accept="image/*">
+        
+        <input type="text" id="wantsTextInput" placeholder="Wants Box Name (e.g. WANTS)" style="margin-top: 10px;">
+        <label style="font-size: 11px;">Wants Box Background Image:</label>
+        <input type="file" id="wantsBgUpload" accept="image/*">
+    </div>
+
+    <div class="settingGroup">
+        <h3>Items Editor</h3>
+        <div id="itemsEditor"></div>
+        <button id="addItemBtn">+ ADD ITEM</button>
+    </div>
+
+    <div class="settingGroup">
+        <h3>Data Management</h3>
+        <button id="exportBtn">EXPORT JSON</button>
+        <input type="file" id="importInput" accept=".json">
+    </div>
+</div>
+
+<script>
+/* =========================
+SETTINGS & DATA
+========================= */
+let settings = {
+    // 0. Background
+    homeBgType: "default", // 'default', 'image', 'video'
+    homeBgData: "",
+
+    // 1. Home
+    homeTitle: "Needs vs Wants",
+    homeSubtitle: "Fun Classroom Sorting Competition",
+    homeFontFamily: "'Poppins', Arial",
+    homeTitleSize: "64",
+    homeSubtitleSize: "24",
+    homeFontColor: "#ffffff",
+    
+    // 2. Game Title
+    gameTitle: "Needs vs Wants",
+    gameTitleFont: "'Poppins', Arial",
+    gameTitleSize: "28",
+    gameTitleColor: "#333333",
+
+    // 3. General Game
+    fontFamily: "'Poppins', Arial",
+    fontSize: "14",
+    fontColor: "#333333",
+
+    // Boxes
+    needsText: "NEEDS",
+    wantsText: "WANTS",
+    needsBg: "",
+    wantsBg: ""
+};
+
+const teamColors = ["#ff7675", "#74b9ff", "#55efc4", "#ffeaa7", "#a29bfe", "#fd79a8"];
+
+let items = [
+    { name: "Food", category: "needs", image: "https://cdn-icons-png.flaticon.com/512/1046/1046784.png" },
+    { name: "Water", category: "needs", image: "https://cdn-icons-png.flaticon.com/512/824/824239.png" },
+    { name: "Medicine", category: "needs", image: "https://cdn-icons-png.flaticon.com/512/3063/3063206.png" },
+    { name: "Toy", category: "wants", image: "https://cdn-icons-png.flaticon.com/512/3082/3082037.png" },
+    { name: "Phone", category: "wants", image: "https://cdn-icons-png.flaticon.com/512/545/545245.png" },
+    { name: "Candy", category: "wants", image: "https://cdn-icons-png.flaticon.com/512/2821/2821808.png" }
+];
+
+// Variable to track which team's item is being dragged
+let draggedItemTeam = null;
+
+/* =========================
+CORE LOGIC
+========================= */
+function createTeams() {
+    const container = document.getElementById("teamsContainer");
+    container.innerHTML = "";
+    const count = parseInt(document.getElementById("teamCount").value);
+
+    for(let i=1; i<=count; i++) {
+        const teamColor = teamColors[(i-1) % teamColors.length];
+        const team = document.createElement("div");
+        team.className = "team";
+        team.dataset.team = i; // Assign Team ID to the container
+        
+        // Inline styles for backgrounds if uploaded
+        const nBg = settings.needsBg ? `background-image: url('${settings.needsBg}');` : '';
+        const wBg = settings.wantsBg ? `background-image: url('${settings.wantsBg}');` : '';
+
+        team.innerHTML = `
+            <div class="teamHeader" style="background: ${teamColor};">
+                <div class="teamTitle">TEAM ${i}</div>
+                <div class="score">Score: <span class="teamScore">0</span></div>
+            </div>
+            <div class="boxContainer">
+                <div class="dropBox" data-category="needs" style="${nBg}">
+                    <h2 class="boxText">${settings.needsText}</h2>
+                    <div class="itemGrid"></div>
+                </div>
+                <div class="dropBox" data-category="wants" style="${wBg}">
+                    <h2 class="boxText">${settings.wantsText}</h2>
+                    <div class="itemGrid"></div>
+                </div>
+            </div>
+            <div class="itemPool"></div>
+        `;
+        container.appendChild(team);
+        
+        const pool = team.querySelector(".itemPool");
+        
+        items.forEach((item, index) => {
+            const div = document.createElement("div");
+            div.className = "item";
+            div.draggable = true;
+            div.dataset.category = item.category;
+            div.dataset.team = i; // Assign Team ID to the item
+            div.id = "team" + i + "item" + index;
+            div.innerHTML = `<img src="${item.image}" draggable="false"><span class="itemText">${item.name}</span>`;
+            
+            div.addEventListener("dragstart", (e) => {
+                e.dataTransfer.setData("text", div.id);
+                draggedItemTeam = div.dataset.team; // Register which team owns the item
+                setTimeout(() => div.style.opacity = '0.5', 0);
+            });
+            div.addEventListener("dragend", () => {
+                div.style.opacity = '1';
+                draggedItemTeam = null; // Reset dragging state
+            });
+
+            pool.appendChild(div);
+        });
+    }
+    activateDrop();
+    applyFonts();
+    applyHomeBackground();
+}
+
+function activateDrop() {
+    document.querySelectorAll(".dropBox, .itemPool").forEach(box => {
+        box.addEventListener("dragover", e => {
+            const boxTeam = box.closest('.team').dataset.team;
+            // Only allow dragging over if the item matches the box's team
+            if (draggedItemTeam === boxTeam) {
+                e.preventDefault();
+                box.classList.add('drag-over');
+            }
+        });
+        box.addEventListener("dragleave", e => box.classList.remove('drag-over'));
+        box.addEventListener("drop", e => {
+            e.preventDefault();
+            box.classList.remove('drag-over');
+            const id = e.dataTransfer.getData("text");
+            const item = document.getElementById(id);
+            const boxTeam = box.closest('.team').dataset.team;
+
+            // Final check to make absolutely sure it belongs to the team
+            if(item && item.dataset.team === boxTeam) {
+                if(box.classList.contains('dropBox')) {
+                    box.querySelector(".itemGrid").appendChild(item);
+                } else {
+                    box.appendChild(item);
+                }
+                item.classList.remove("correct", "wrong");
+            }
+        });
+    });
+}
+
+/* =========================
+FONTS & BACKGROUND APPLICATION
+========================= */
+function applyFonts() {
+    // 1. Homepage
+    const ht = document.getElementById("homeTitle");
+    const hs = document.getElementById("homeSubtitle");
+    ht.style.fontFamily = settings.homeFontFamily;
+    ht.style.fontSize = settings.homeTitleSize + "px";
+    ht.style.color = settings.homeFontColor;
+    hs.style.fontFamily = settings.homeFontFamily;
+    hs.style.fontSize = settings.homeSubtitleSize + "px";
+    hs.style.color = settings.homeFontColor;
+
+    // 2. Game Title
+    const gt = document.getElementById("gameTitle");
+    gt.style.fontFamily = settings.gameTitleFont;
+    gt.style.fontSize = settings.gameTitleSize + "px";
+    gt.style.color = settings.gameTitleColor;
+
+    // 3. General
+    document.querySelectorAll(".teamTitle, .score, .item span, .boxText").forEach(el => {
+        el.style.fontFamily = settings.fontFamily;
+        el.style.fontSize = settings.fontSize + "px";
+        el.style.color = settings.fontColor;
+    });
+}
+
+function applyHomeBackground() {
+    const videoBg = document.getElementById("homeVideoBg");
+    const imageBg = document.getElementById("homeImageBg");
+
+    if (settings.homeBgType === 'video') {
+        videoBg.src = settings.homeBgData;
+        videoBg.style.display = 'block';
+        imageBg.style.display = 'none';
+    } else if (settings.homeBgType === 'image') {
+        videoBg.style.display = 'none';
+        imageBg.style.display = 'block';
+        imageBg.style.backgroundImage = `url('${settings.homeBgData}')`;
+    } else {
+        // Default
+        videoBg.style.display = 'none';
+        imageBg.style.display = 'block';
+        imageBg.style.backgroundImage = `linear-gradient(rgba(15, 32, 39, 0.7), rgba(32, 58, 67, 0.7), rgba(44, 83, 100, 0.7)), url('https://images.unsplash.com/photo-1503676260728-1c00da094a0b?q=80&w=1600')`;
+    }
+}
+
+/* =========================
+GAME ACTIONS (VIEW & CHECK)
+========================= */
+let viewMode = false;
+document.getElementById("viewBtn").addEventListener("click", () => {
+    viewMode = !viewMode;
+    document.querySelectorAll(".itemGrid").forEach(grid => {
+        grid.style.display = viewMode ? "grid" : "none";
+    });
+});
+
+document.getElementById("checkBtn").addEventListener("click", () => {
+    // Force view open to show answers
+    document.querySelectorAll(".itemGrid").forEach(grid => grid.style.display = "grid");
+    viewMode = true;
+
+    document.querySelectorAll(".team").forEach(team => {
+        let score = 0;
+        team.querySelectorAll(".dropBox").forEach(box => {
+            const expectedType = box.dataset.category;
+            box.querySelectorAll(".item").forEach(item => {
+                item.classList.remove("correct", "wrong");
+                if(item.dataset.category === expectedType) {
+                    item.classList.add("correct");
+                    score++;
+                } else {
+                    item.classList.add("wrong");
+                }
+            });
+        });
+        team.querySelectorAll(".itemPool .item").forEach(item => item.classList.remove("correct", "wrong"));
+        team.querySelector(".teamScore").innerText = score;
+    });
+});
+
+document.getElementById("resetBtn").addEventListener("click", () => {
+    viewMode = false;
+    createTeams(); 
+    updateTimerDisplay(parseInt(document.getElementById("timerInput").value));
+});
+
+/* =========================
+NAVIGATION
+========================= */
+document.getElementById("homeBtn").addEventListener("click", () => {
+    document.getElementById("gamePage").style.display = "none";
+    document.getElementById("homePage").style.display = "flex";
+    clearInterval(timerInterval);
+});
+
+document.getElementById("enterBtn").addEventListener("click", () => {
+    document.getElementById("homePage").style.display = "none";
+    document.getElementById("gamePage").style.display = "block";
+});
+
+/* =========================
+TIMER LOGIC
+========================= */
+let timerInterval;
+document.getElementById("startBtn").addEventListener("click", () => {
+    clearInterval(timerInterval);
+    let time = parseInt(document.getElementById("timerInput").value);
+    updateTimerDisplay(time);
+
+    timerInterval = setInterval(() => {
+        time--;
+        updateTimerDisplay(time);
+        if(time <= 0) {
+            clearInterval(timerInterval);
+            setTimeout(() => alert("TIME IS UP!"), 100);
+        }
+    }, 1000);
+});
+
+document.getElementById("stopBtn").addEventListener("click", () => clearInterval(timerInterval));
+
+function updateTimerDisplay(time) {
+    if(isNaN(time) || time < 0) time = 0;
+    let minutes = Math.floor(time / 60).toString().padStart(2, "0");
+    let seconds = (time % 60).toString().padStart(2, "0");
+    document.getElementById("topTimer").innerText = `${minutes}:${seconds}`;
+}
+
+/* =========================
+SETTINGS LOGIC & FILE UPLOADS
+========================= */
+document.getElementById("settingsBtn").addEventListener("click", () => document.getElementById("settingsPanel").classList.add("active"));
+document.getElementById("closeSettings").addEventListener("click", () => document.getElementById("settingsPanel").classList.remove("active"));
+
+// Homepage Background Upload
+document.getElementById("homeMediaUpload").addEventListener("change", (e) => {
+    const file = e.target.files[0];
+    if(!file) return;
+    const reader = new FileReader();
+    reader.onload = (event) => { 
+        settings.homeBgData = event.target.result; 
+        if (file.type.startsWith('video/')) {
+            settings.homeBgType = 'video';
+        } else {
+            settings.homeBgType = 'image';
+        }
+    };
+    reader.readAsDataURL(file);
+});
+
+// Box Background Uploads
+document.getElementById("needsBgUpload").addEventListener("change", (e) => {
+    const file = e.target.files[0];
+    if(!file) return;
+    const reader = new FileReader();
+    reader.onload = (event) => { settings.needsBg = event.target.result; };
+    reader.readAsDataURL(file);
+});
+
+document.getElementById("wantsBgUpload").addEventListener("change", (e) => {
+    const file = e.target.files[0];
+    if(!file) return;
+    const reader = new FileReader();
+    reader.onload = (event) => { settings.wantsBg = event.target.result; };
+    reader.readAsDataURL(file);
+});
+
+document.getElementById("saveSettingsBtn").addEventListener("click", () => {
+    // 1. Home
+    settings.homeTitle = document.getElementById("homeTitleInput").value || settings.homeTitle;
+    settings.homeSubtitle = document.getElementById("homeSubtitleInput").value || settings.homeSubtitle;
+    settings.homeFontFamily = document.getElementById("homeFontFamily").value;
+    settings.homeTitleSize = document.getElementById("homeTitleSize").value;
+    settings.homeSubtitleSize = document.getElementById("homeSubtitleSize").value;
+    settings.homeFontColor = document.getElementById("homeFontColor").value;
+
+    // 2. Game Title
+    settings.gameTitle = document.getElementById("gameTitleInput").value || settings.gameTitle;
+    settings.gameTitleFont = document.getElementById("gameTitleFont").value;
+    settings.gameTitleSize = document.getElementById("gameTitleSize").value;
+    settings.gameTitleColor = document.getElementById("gameTitleColor").value;
+
+    // 3. General
+    settings.fontFamily = document.getElementById("fontFamily").value;
+    settings.fontSize = document.getElementById("fontSize").value;
+    settings.fontColor = document.getElementById("fontColor").value;
+
+    // Boxes
+    settings.needsText = document.getElementById("needsTextInput").value || settings.needsText;
+    settings.wantsText = document.getElementById("wantsTextInput").value || settings.wantsText;
+
+    // Apply texts directly to specific IDs
+    document.getElementById("homeTitle").innerText = settings.homeTitle;
+    document.getElementById("homeSubtitle").innerText = settings.homeSubtitle;
+    document.getElementById("gameTitle").innerText = settings.gameTitle;
+
+    createTeams(); // Re-creates boxes and reapplies background images, fonts, texts
+    alert("Settings Saved!");
+    document.getElementById("settingsPanel").classList.remove("active");
+});
+
+/* Item Editor */
+function renderItemsEditor() {
+    const editor = document.getElementById("itemsEditor");
+    editor.innerHTML = "";
+    items.forEach((item, index) => {
+        const div = document.createElement("div");
+        div.className = "itemEditor";
+        div.innerHTML = `
+            <img src="${item.image}">
+            <input type="text" value="${item.name}" placeholder="Item Name" class="itemName">
+            <select class="itemCategory">
+                <option value="needs" ${item.category === "needs" ? "selected" : ""}>Needs</option>
+                <option value="wants" ${item.category === "wants" ? "selected" : ""}>Wants</option>
+            </select>
+            <input type="file" class="itemImage" accept="image/*">
+            <button class="deleteItemBtn">DELETE ITEM</button>
+        `;
+
+        div.querySelector(".deleteItemBtn").addEventListener("click", () => {
+            items.splice(index, 1);
+            renderItemsEditor();
+            createTeams();
+        });
+
+        div.querySelector(".itemName").addEventListener("input", (e) => {
+            items[index].name = e.target.value;
+            createTeams();
+        });
+
+        div.querySelector(".itemCategory").addEventListener("change", (e) => {
+            items[index].category = e.target.value;
+            createTeams();
+        });
+
+        div.querySelector(".itemImage").addEventListener("change", (e) => {
+            const file = e.target.files[0];
+            if(!file) return;
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                items[index].image = event.target.result;
+                renderItemsEditor();
+                createTeams();
+            };
+            reader.readAsDataURL(file);
+        });
+        editor.appendChild(div);
+    });
+}
+renderItemsEditor();
+
+// Initial creation
+createTeams();
+
+document.getElementById("addItemBtn").addEventListener("click", () => {
+    items.push({
+        name: "New Item",
+        category: "needs",
+        image: "https://cdn-icons-png.flaticon.com/512/992/992651.png"
+    });
+    renderItemsEditor();
+    createTeams();
+});
+
+/* JSON Export/Import */
+document.getElementById("exportBtn").addEventListener("click", () => {
+    const gameData = { settings: settings, items: items };
+    const blob = new Blob([JSON.stringify(gameData, null, 2)], { type: "application/json" });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = "needs_wants_game.json";
+    link.click();
+});
+
+document.getElementById("importInput").addEventListener("change", (e) => {
+    const file = e.target.files[0];
+    if(!file) return;
+    const reader = new FileReader();
+    reader.onload = function(event) {
+        try {
+            const data = JSON.parse(event.target.result);
+            settings = data.settings || settings;
+            items = data.items || items;
+            
+            document.getElementById("homeTitle").innerText = settings.homeTitle;
+            document.getElementById("homeSubtitle").innerText = settings.homeSubtitle;
+            document.getElementById("gameTitle").innerText = settings.gameTitle;
+            
+            createTeams();
+            renderItemsEditor();
+            alert("Game Imported Successfully!");
+        } catch(err) {
+            alert("Error importing file. Make sure it's valid JSON.");
+        }
+    };
+    reader.readAsText(file);
+});
+
+document.getElementById("teamCount").addEventListener("change", createTeams);
+</script>
+</body>
+</html>
