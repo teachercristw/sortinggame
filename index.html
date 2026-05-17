@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Needs vs Wants: Elite Competition</title>
+<!-- Fallback fonts included in CSS if offline, Google Fonts used if online -->
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800;900&display=swap" rel="stylesheet">
 
 <style>
@@ -55,6 +56,7 @@ HOME PAGE & BACKGROUNDS
     background: linear-gradient(rgba(15, 32, 39, 0.3), rgba(32, 58, 67, 0.3)),
                 url('https://images.unsplash.com/photo-1503676260728-1c00da094a0b?q=80&w=1600');
     background-size: cover; background-position: center;
+    display: none;
 }
 
 #homeContent {
@@ -63,10 +65,7 @@ HOME PAGE & BACKGROUNDS
     margin-top: 15vh;
 }
 
-/* 
-  paint-order ensures the stroke goes OUTSIDE the text 
-  so it doesn't make the letters look thin 
-*/
+/* Thick Outlined Text using paint-order */
 #homeTitle { 
     font-size: 90px; 
     font-weight: 900; 
@@ -434,7 +433,8 @@ function playSound(isCorrect) {
 SETTINGS & DATA
 ========================= */
 let settings = {
-    homeBgType: "default", homeBgData: "",
+    homeBgType: "video", 
+    homeBgData: "sort.mp4", // Defaults to the MP4 file on your GitHub repository
     homeTitle: "Needs vs Wants", homeSubtitle: "Sanxing Sparks Challenge",
     homeFontFamily: "'Poppins', 'Century Gothic', Arial", 
     homeTitleSize: "90", homeSubtitleSize: "40", homeFontColor: "#ffffff",
@@ -587,12 +587,9 @@ FONTS & BACKGROUND
 function applyFonts() {
     const ht = document.getElementById("homeTitle"); const hs = document.getElementById("homeSubtitle");
     
-    // Core font values
     ht.style.fontFamily = settings.homeFontFamily; 
     ht.style.fontSize = settings.homeTitleSize + "px"; 
     ht.style.color = settings.homeFontColor;
-    
-    // Webkit Stroke application
     ht.style.webkitTextStroke = `${settings.homeTitleStrokeSize}px ${settings.homeTitleStrokeColor}`;
     
     hs.style.fontFamily = settings.homeFontFamily; 
@@ -610,9 +607,13 @@ function applyFonts() {
 
 function applyHomeBackground() {
     const videoBg = document.getElementById("homeVideoBg"); const imageBg = document.getElementById("homeImageBg");
-    if (settings.homeBgType === 'video') { videoBg.src = settings.homeBgData; videoBg.style.display = 'block'; imageBg.style.display = 'none';
-    } else if (settings.homeBgType === 'image') { videoBg.style.display = 'none'; imageBg.style.display = 'block'; imageBg.style.backgroundImage = `url('${settings.homeBgData}')`;
-    } else { videoBg.style.display = 'none'; imageBg.style.display = 'block'; imageBg.style.backgroundImage = `linear-gradient(rgba(15, 32, 39, 0.3), rgba(32, 58, 67, 0.3)), url('https://images.unsplash.com/photo-1503676260728-1c00da094a0b?q=80&w=1600')`; }
+    if (settings.homeBgType === 'video') { 
+        videoBg.src = settings.homeBgData; videoBg.style.display = 'block'; imageBg.style.display = 'none';
+    } else if (settings.homeBgType === 'image') { 
+        videoBg.style.display = 'none'; imageBg.style.display = 'block'; imageBg.style.backgroundImage = `url('${settings.homeBgData}')`;
+    } else { 
+        videoBg.style.display = 'none'; imageBg.style.display = 'block'; imageBg.style.backgroundImage = `linear-gradient(rgba(15, 32, 39, 0.3), rgba(32, 58, 67, 0.3)), url('https://images.unsplash.com/photo-1503676260728-1c00da094a0b?q=80&w=1600')`; 
+    }
 }
 
 /* =========================
