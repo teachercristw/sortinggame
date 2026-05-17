@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Needs vs Wants: Elite Competition</title>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800;900&display=swap" rel="stylesheet">
 
 <style>
 /* =========================
@@ -57,44 +57,45 @@ HOME PAGE & BACKGROUNDS
     background-size: cover; background-position: center;
 }
 
-/* Redesigned Text Container */
 #homeContent {
     width: 90%; max-width: 1000px;
     text-align: center; color: white; z-index: 10;
-    margin-top: 15vh; /* Places text higher up */
+    margin-top: 15vh;
 }
 
-/* Outlined Text for Visibility */
+/* 
+  paint-order ensures the stroke goes OUTSIDE the text 
+  so it doesn't make the letters look thin 
+*/
 #homeTitle { 
-    font-size: clamp(40px, 8vw, 90px); 
-    font-weight: 800; margin-bottom: 10px; 
+    font-size: 90px; 
+    font-weight: 900; 
+    margin-bottom: 10px; 
     -webkit-text-stroke: 3px #1e272e;
+    paint-order: stroke fill;
     text-shadow: 4px 4px 15px rgba(0,0,0,0.8);
     line-height: 1.1;
 }
 
 #homeSubtitle { 
-    font-size: clamp(20px, 4vw, 40px); 
-    font-weight: 800; margin-bottom: 40px; 
+    font-size: 40px; 
+    font-weight: 900; 
+    margin-bottom: 40px; 
     color: #ffde59;
-    -webkit-text-stroke: 1.5px #1e272e;
+    -webkit-text-stroke: 2px #1e272e;
+    paint-order: stroke fill;
     text-shadow: 2px 2px 10px rgba(0,0,0,0.8);
 }
 
-/* Button Anchored to Bottom */
 #enterBtn {
-    position: absolute;
-    bottom: 12vh;
+    position: absolute; bottom: 12vh;
     padding: 20px 70px; font-size: 32px; font-family: var(--primary-font); 
-    border: 5px solid #1e272e; border-radius: 50px; cursor: pointer; font-weight: 800; 
+    border: 5px solid #1e272e; border-radius: 50px; cursor: pointer; font-weight: 900; 
     background: #ffcc00; color: #1e272e; 
     box-shadow: 0 10px 0 #d4aa00, 0 15px 25px rgba(0,0,0,0.5); 
     transition: all 0.1s ease; z-index: 10;
 }
-#enterBtn:active { 
-    transform: translateY(8px); 
-    box-shadow: 0 2px 0 #d4aa00, 0 5px 10px rgba(0,0,0,0.5); 
-}
+#enterBtn:active { transform: translateY(8px); box-shadow: 0 2px 0 #d4aa00, 0 5px 10px rgba(0,0,0,0.5); }
 
 /* =========================
 GAME PAGE & HEADER
@@ -131,7 +132,7 @@ header {
 #homeBtn, #settingsBtn { font-size: 18px; border-color: #cbd5e1; }
 
 /* =========================
-TEAMS AREA (AUTOFITTING GRID)
+TEAMS AREA
 ========================= */
 #teamsContainer {
     display: flex; width: 100vw; height: calc(100vh - 75px);
@@ -164,19 +165,18 @@ TEAMS AREA (AUTOFITTING GRID)
 DYNAMIC LAYOUT SIZING
 ========================= */
 .boxContainer {
-    display: flex; gap: 10px; padding: 10px; flex: 1; /* 50% split */
+    display: flex; gap: 10px; padding: 10px; flex: 1; 
     transition: flex 0.4s cubic-bezier(0.4, 0, 0.2, 1); min-height: 0;
 }
 
 .itemPool {
-    flex: 1; /* 50% split */
+    flex: 1; 
     background: #f1f5f9; padding: 10px; display: grid;
     grid-template-columns: repeat(auto-fill, minmax(65px, 1fr)); gap: 8px;
     overflow-y: auto; border-top: 3px solid #e2e8f0; align-content: start;
     transition: flex 0.4s cubic-bezier(0.4, 0, 0.2, 1); min-height: 0;
 }
 
-/* Auto-Expand CSS */
 #teamsContainer.view-expanded .boxContainer { flex: 3; }
 #teamsContainer.view-expanded .itemPool { flex: 0.4; }
 
@@ -212,10 +212,8 @@ ITEMS & HIDDEN LOGIC
 .item img { width: 40px; height: 40px; object-fit: contain; pointer-events: none; }
 .item span { display: block; margin-top: 4px; font-size: 11px; font-weight: 800; pointer-events: none; }
 
-/* HIDES ITEMS IN DROPPED BOXES */
 .team.hidden-items .dropBox .item { display: none !important; }
 
-/* Dragging Ghost Overlay */
 .item.dragging-ghost {
     position: fixed; z-index: 999999 !important; width: 80px !important; height: 80px !important;
     pointer-events: none; box-shadow: 0 10px 20px rgba(0,0,0,0.15); transform: scale(1.1); opacity: 0.95;
@@ -250,7 +248,7 @@ SETTINGS PANEL
 .settingGroup button { cursor: pointer; font-weight: 800; background: #f8fafc; }
 .settingGroup button:hover { background: #e2e8f0; }
 
-.font-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.font-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; align-items: center; }
 .font-grid select, .font-grid input { margin-bottom: 0; }
 
 #saveSettingsBtn { background: #3b82f6; color: white; border: none; font-size: 16px; border-radius: 12px;}
@@ -323,13 +321,32 @@ SETTINGS PANEL
         <input type="text" id="homeTitleInput" placeholder="Homepage Title">
         <input type="text" id="homeSubtitleInput" placeholder="Homepage Subtitle">
         <div class="font-grid">
-            <select id="homeFontFamily">
-                <option value="'Poppins', Arial">Poppins</option><option value="Arial">Arial</option>
-                <option value="'Century Gothic', sans-serif">Century Gothic</option><option value="'Comic Sans MS', cursive">Comic Sans MS</option>
+            <select id="homeFontFamily" style="grid-column: span 2;">
+                <option value="'Poppins', 'Century Gothic', Arial">Poppins / Gothic</option>
+                <option value="Arial">Arial</option>
+                <option value="'Comic Sans MS', cursive">Comic Sans</option>
             </select>
-            <input type="color" id="homeFontColor" value="#ffffff">
-            <input type="number" id="homeTitleSize" value="64" placeholder="Title Size">
-            <input type="number" id="homeSubtitleSize" value="24" placeholder="Subtitle Size">
+            
+            <label style="font-size:11px; margin-top:5px;">Text Fill Color:</label>
+            <input type="color" id="homeFontColor" value="#ffffff" style="margin-top:5px; padding:2px;">
+            
+            <label style="font-size:11px;">Title Size:</label>
+            <input type="number" id="homeTitleSize" value="90">
+            
+            <label style="font-size:11px;">Title Outline (px & Color):</label>
+            <div style="display:flex; gap:4px;">
+                <input type="number" id="homeTitleStrokeSize" value="3" style="width:50%;">
+                <input type="color" id="homeTitleStrokeColor" value="#1e272e" style="width:50%; padding:2px;">
+            </div>
+
+            <label style="font-size:11px; margin-top:5px;">Subtitle Size:</label>
+            <input type="number" id="homeSubtitleSize" value="40" style="margin-top:5px;">
+            
+            <label style="font-size:11px;">Sub Outline (px & Color):</label>
+            <div style="display:flex; gap:4px;">
+                <input type="number" id="homeSubStrokeSize" value="2" style="width:50%;">
+                <input type="color" id="homeSubStrokeColor" value="#1e272e" style="width:50%; padding:2px;">
+            </div>
         </div>
     </div>
 
@@ -338,8 +355,9 @@ SETTINGS PANEL
         <input type="text" id="gameTitleInput" placeholder="Game Title">
         <div class="font-grid">
             <select id="gameTitleFont">
-                <option value="'Poppins', Arial">Poppins</option><option value="Arial">Arial</option>
-                <option value="'Century Gothic', sans-serif">Century Gothic</option><option value="'Comic Sans MS', cursive">Comic Sans MS</option>
+                <option value="'Poppins', 'Century Gothic', Arial">Poppins / Gothic</option>
+                <option value="Arial">Arial</option>
+                <option value="'Comic Sans MS', cursive">Comic Sans</option>
             </select>
             <input type="color" id="gameTitleColor" value="#333333">
             <input type="number" id="gameTitleSize" value="28" placeholder="Size">
@@ -350,8 +368,9 @@ SETTINGS PANEL
         <h3>3. General Game Fonts</h3>
         <div class="font-grid">
             <select id="fontFamily">
-                <option value="'Poppins', Arial">Poppins</option><option value="Arial">Arial</option>
-                <option value="'Century Gothic', sans-serif">Century Gothic</option><option value="'Comic Sans MS', cursive">Comic Sans MS</option>
+                <option value="'Poppins', 'Century Gothic', Arial">Poppins / Gothic</option>
+                <option value="Arial">Arial</option>
+                <option value="'Comic Sans MS', cursive">Comic Sans</option>
             </select>
             <input type="color" id="fontColor" value="#333333">
             <input type="number" id="fontSize" value="14" placeholder="Size">
@@ -416,10 +435,13 @@ SETTINGS & DATA
 ========================= */
 let settings = {
     homeBgType: "default", homeBgData: "",
-    homeTitle: "Needs vs Wants", homeSubtitle: "Classroom Sorting Competition",
-    homeFontFamily: "'Poppins', Arial", homeTitleSize: "90", homeSubtitleSize: "40", homeFontColor: "#ffffff",
-    gameTitle: "Needs vs Wants", gameTitleFont: "'Poppins', Arial", gameTitleSize: "28", gameTitleColor: "#333333",
-    fontFamily: "'Poppins', Arial", fontSize: "14", fontColor: "#333333",
+    homeTitle: "Needs vs Wants", homeSubtitle: "Sanxing Sparks Challenge",
+    homeFontFamily: "'Poppins', 'Century Gothic', Arial", 
+    homeTitleSize: "90", homeSubtitleSize: "40", homeFontColor: "#ffffff",
+    homeTitleStrokeSize: "3", homeTitleStrokeColor: "#1e272e",
+    homeSubStrokeSize: "2", homeSubStrokeColor: "#1e272e",
+    gameTitle: "Needs vs Wants", gameTitleFont: "'Poppins', 'Century Gothic', Arial", gameTitleSize: "28", gameTitleColor: "#333333",
+    fontFamily: "'Poppins', 'Century Gothic', Arial", fontSize: "14", fontColor: "#333333",
     needsText: "NEEDS", wantsText: "WANTS", needsBg: "", wantsBg: ""
 };
 
@@ -564,8 +586,19 @@ FONTS & BACKGROUND
 ========================= */
 function applyFonts() {
     const ht = document.getElementById("homeTitle"); const hs = document.getElementById("homeSubtitle");
-    ht.style.fontFamily = settings.homeFontFamily; ht.style.fontSize = settings.homeTitleSize + "px"; ht.style.color = settings.homeFontColor;
-    hs.style.fontFamily = settings.homeFontFamily; hs.style.fontSize = settings.homeSubtitleSize + "px"; hs.style.color = settings.homeFontColor;
+    
+    // Core font values
+    ht.style.fontFamily = settings.homeFontFamily; 
+    ht.style.fontSize = settings.homeTitleSize + "px"; 
+    ht.style.color = settings.homeFontColor;
+    
+    // Webkit Stroke application
+    ht.style.webkitTextStroke = `${settings.homeTitleStrokeSize}px ${settings.homeTitleStrokeColor}`;
+    
+    hs.style.fontFamily = settings.homeFontFamily; 
+    hs.style.fontSize = settings.homeSubtitleSize + "px"; 
+    hs.style.color = settings.homeFontColor;
+    hs.style.webkitTextStroke = `${settings.homeSubStrokeSize}px ${settings.homeSubStrokeColor}`;
 
     const gt = document.getElementById("gameTitle");
     gt.style.fontFamily = settings.gameTitleFont; gt.style.fontSize = settings.gameTitleSize + "px"; gt.style.color = settings.gameTitleColor;
@@ -663,7 +696,35 @@ function updateTimerDisplay(time) {
 /* =========================
 SETTINGS PANEL
 ========================= */
-document.getElementById("settingsBtn").addEventListener("click", () => document.getElementById("settingsPanel").classList.add("active"));
+document.getElementById("settingsBtn").addEventListener("click", () => {
+    document.getElementById("settingsPanel").classList.add("active");
+    
+    // Populate form with current settings
+    document.getElementById("homeTitleInput").value = settings.homeTitle;
+    document.getElementById("homeSubtitleInput").value = settings.homeSubtitle;
+    document.getElementById("homeFontFamily").value = settings.homeFontFamily;
+    document.getElementById("homeTitleSize").value = settings.homeTitleSize;
+    document.getElementById("homeSubtitleSize").value = settings.homeSubtitleSize;
+    document.getElementById("homeFontColor").value = settings.homeFontColor;
+    
+    document.getElementById("homeTitleStrokeSize").value = settings.homeTitleStrokeSize;
+    document.getElementById("homeTitleStrokeColor").value = settings.homeTitleStrokeColor;
+    document.getElementById("homeSubStrokeSize").value = settings.homeSubStrokeSize;
+    document.getElementById("homeSubStrokeColor").value = settings.homeSubStrokeColor;
+    
+    document.getElementById("gameTitleInput").value = settings.gameTitle;
+    document.getElementById("gameTitleFont").value = settings.gameTitleFont;
+    document.getElementById("gameTitleSize").value = settings.gameTitleSize;
+    document.getElementById("gameTitleColor").value = settings.gameTitleColor;
+    
+    document.getElementById("fontFamily").value = settings.fontFamily;
+    document.getElementById("fontSize").value = settings.fontSize;
+    document.getElementById("fontColor").value = settings.fontColor;
+    
+    document.getElementById("needsTextInput").value = settings.needsText;
+    document.getElementById("wantsTextInput").value = settings.wantsText;
+});
+
 document.getElementById("closeSettings").addEventListener("click", () => document.getElementById("settingsPanel").classList.remove("active"));
 
 document.getElementById("homeMediaUpload").addEventListener("change", (e) => {
@@ -681,16 +742,30 @@ document.getElementById("wantsBgUpload").addEventListener("change", (e) => {
 document.getElementById("saveSettingsBtn").addEventListener("click", () => {
     settings.homeTitle = document.getElementById("homeTitleInput").value || settings.homeTitle;
     settings.homeSubtitle = document.getElementById("homeSubtitleInput").value || settings.homeSubtitle;
-    settings.homeFontFamily = document.getElementById("homeFontFamily").value; settings.homeTitleSize = document.getElementById("homeTitleSize").value;
-    settings.homeSubtitleSize = document.getElementById("homeSubtitleSize").value; settings.homeFontColor = document.getElementById("homeFontColor").value;
+    settings.homeFontFamily = document.getElementById("homeFontFamily").value; 
+    settings.homeTitleSize = document.getElementById("homeTitleSize").value;
+    settings.homeSubtitleSize = document.getElementById("homeSubtitleSize").value; 
+    settings.homeFontColor = document.getElementById("homeFontColor").value;
 
-    settings.gameTitle = document.getElementById("gameTitleInput").value || settings.gameTitle; settings.gameTitleFont = document.getElementById("gameTitleFont").value;
-    settings.gameTitleSize = document.getElementById("gameTitleSize").value; settings.gameTitleColor = document.getElementById("gameTitleColor").value;
+    settings.homeTitleStrokeSize = document.getElementById("homeTitleStrokeSize").value;
+    settings.homeTitleStrokeColor = document.getElementById("homeTitleStrokeColor").value;
+    settings.homeSubStrokeSize = document.getElementById("homeSubStrokeSize").value;
+    settings.homeSubStrokeColor = document.getElementById("homeSubStrokeColor").value;
 
-    settings.fontFamily = document.getElementById("fontFamily").value; settings.fontSize = document.getElementById("fontSize").value; settings.fontColor = document.getElementById("fontColor").value;
-    settings.needsText = document.getElementById("needsTextInput").value || settings.needsText; settings.wantsText = document.getElementById("wantsTextInput").value || settings.wantsText;
+    settings.gameTitle = document.getElementById("gameTitleInput").value || settings.gameTitle; 
+    settings.gameTitleFont = document.getElementById("gameTitleFont").value;
+    settings.gameTitleSize = document.getElementById("gameTitleSize").value; 
+    settings.gameTitleColor = document.getElementById("gameTitleColor").value;
 
-    document.getElementById("homeTitle").innerText = settings.homeTitle; document.getElementById("homeSubtitle").innerText = settings.homeSubtitle; document.getElementById("gameTitle").innerText = settings.gameTitle;
+    settings.fontFamily = document.getElementById("fontFamily").value; 
+    settings.fontSize = document.getElementById("fontSize").value; 
+    settings.fontColor = document.getElementById("fontColor").value;
+    settings.needsText = document.getElementById("needsTextInput").value || settings.needsText; 
+    settings.wantsText = document.getElementById("wantsTextInput").value || settings.wantsText;
+
+    document.getElementById("homeTitle").innerText = settings.homeTitle; 
+    document.getElementById("homeSubtitle").innerText = settings.homeSubtitle; 
+    document.getElementById("gameTitle").innerText = settings.gameTitle;
     createTeams(); alert("Settings Saved!"); document.getElementById("settingsPanel").classList.remove("active");
 });
 
@@ -722,7 +797,7 @@ document.getElementById("addItemBtn").addEventListener("click", () => { items.pu
 
 document.getElementById("exportBtn").addEventListener("click", () => {
     const b = new Blob([JSON.stringify({ settings, items }, null, 2)], { type: "application/json" });
-    const l = document.createElement("a"); l.href = URL.createObjectURL(b); l.download = "needs_wants_game.json"; l.click();
+    const l = document.createElement("a"); l.href = URL.createObjectURL(b); l.download = "sanxing_needs_wants_game.json"; l.click();
 });
 document.getElementById("importInput").addEventListener("change", (e) => {
     const f = e.target.files[0]; if(!f) return; const r = new FileReader();
