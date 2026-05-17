@@ -3,11 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Needs vs Wants: Elite Challenge</title>
+<title>Needs vs Wants: Elite Competition</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
 
 <style>
 /* =========================
-GLOBAL RESET & CONSTRAINTS
+GLOBAL RESET & VARIABLES
 ========================= */
 * {
     margin: 0;
@@ -15,659 +16,703 @@ GLOBAL RESET & CONSTRAINTS
     box-sizing: border-box;
 }
 
-body { 
+:root {
+    --primary-font: 'Poppins', Arial, sans-serif;
+    --bg-color: #f0f4f8;
+    --card-bg: #ffffff;
+    --text-main: #333333;
+    --shadow-sm: 0 4px 6px rgba(0,0,0,0.05);
+    --shadow-md: 0 8px 15px rgba(0,0,0,0.1);
+}
+
+body {
+    font-family: var(--primary-font);
+    background: var(--bg-color);
+    overflow: hidden;
+    color: var(--text-main);
+    /* Prevents smartboard zoom/highlighting */
     user-select: none; 
     -webkit-user-select: none; 
     touch-action: none; 
-    margin: 0; 
-    overflow: hidden; 
-    font-family: 'Century Gothic', 'AppleGothic', sans-serif;
-    font-weight: bold;
-    background: #1e272e;
-    color: #333;
 }
 
 /* =========================
-SCREENS & UI
+HOME PAGE & BACKGROUNDS
 ========================= */
-.screen {
-    position: fixed;
-    inset: 0;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    z-index: 2000;
-    background: linear-gradient(135deg, #74ebd5 0%, #acb6e5 100%);
-    text-align: center;
-    transition: opacity 0.5s ease;
+#homePage {
+    position: fixed; inset: 0;
+    display: flex; justify-content: center; align-items: center;
+    z-index: 999999; overflow: hidden;
 }
 
-.btn-large {
-    padding: 20px 60px;
-    font-size: 2.5rem;
-    background: #ffcc00;
-    color: #333;
-    border: none;
-    border-radius: 50px;
-    box-shadow: 0 8px 0 #d4aa00;
-    cursor: pointer;
-    transition: transform 0.1s;
-    margin-top: 20px;
-    font-family: inherit;
-    font-weight: 800;
+.home-bg-layer {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%; object-fit: cover; z-index: -1;
 }
 
-.btn-large:active { transform: translateY(5px); box-shadow: 0 3px 0 #d4aa00; }
+#homeVideoBg { display: none; }
+#homeImageBg {
+    background: linear-gradient(rgba(15, 32, 39, 0.7), rgba(32, 58, 67, 0.7), rgba(44, 83, 100, 0.7)),
+                url('https://images.unsplash.com/photo-1503676260728-1c00da094a0b?q=80&w=1600');
+    background-size: cover; background-position: center;
+}
+
+#homeCard {
+    width: 90%; max-width: 800px;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    border-radius: 24px; padding: 60px 40px; text-align: center;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    box-shadow: var(--shadow-md); color: white; z-index: 10; 
+}
+
+#homeTitle { font-size: 64px; font-weight: 800; margin-bottom: 10px; text-shadow: 2px 2px 8px rgba(0,0,0,0.5); }
+#homeSubtitle { font-size: 24px; font-weight: 400; margin-bottom: 40px; text-shadow: 1px 1px 5px rgba(0,0,0,0.5); }
+
+#enterBtn {
+    padding: 16px 50px; font-size: 22px; font-family: var(--primary-font); border: none;
+    border-radius: 50px; cursor: pointer; font-weight: 800; background: #ffcc00;
+    color: #333; box-shadow: 0 4px 15px rgba(255, 204, 0, 0.4); transition: all 0.3s ease;
+}
+#enterBtn:hover { transform: translateY(-3px) scale(1.02); box-shadow: 0 8px 20px rgba(255, 204, 0, 0.6); }
 
 /* =========================
-HEADER & TOP CONTROLS
+GAME PAGE & HEADER
 ========================= */
+#gamePage { display: none; height: 100vh; width: 100vw; flex-direction: column; }
+
 header {
-    height: 75px;
-    background: white;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 20px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-    z-index: 10;
+    height: 75px; background: var(--card-bg); display: flex;
+    justify-content: space-between; align-items: center; padding: 0 20px;
+    box-shadow: var(--shadow-sm); position: relative; z-index: 10; flex-shrink: 0;
 }
 
-#gameTitle { font-size: clamp(18px, 3vw, 28px); font-weight: 800; }
+#gameTitle { font-size: clamp(18px, 3vw, 28px); font-weight: 800; color: var(--text-main); }
 
 #topTimer {
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 28px;
-    background: #333;
-    color: #ffcc00;
-    padding: 5px 25px;
-    border-radius: 30px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-    min-width: 120px;
-    text-align: center;
+    position: absolute; left: 50%; transform: translateX(-50%); top: 12px;
+    font-size: 32px; font-weight: 800; background: #333; color: #ffcc00;
+    padding: 5px 30px; border-radius: 30px; box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    min-width: 140px; text-align: center; letter-spacing: 2px;
 }
 
 .controls { display: flex; gap: 8px; align-items: center; }
 .controls button, .controls select, .controls input {
-    padding: 8px 12px;
-    border: 2px solid #e2e8f0;
-    border-radius: 8px;
-    cursor: pointer;
-    font-family: inherit;
-    font-weight: bold;
-    font-size: 14px;
-    background: white;
-    min-height: 44px;
+    padding: 8px 12px; border: 1px solid #e2e8f0; border-radius: 8px; cursor: pointer;
+    font-family: var(--primary-font); font-weight: 600; font-size: 13px;
+    background: white; transition: 0.2s; min-height: 44px;
 }
-.controls button:hover { background: #f8fafc; }
+.controls button:hover { background: #f8fafc; transform: translateY(-1px); }
 
-#startBtn { background: #4ade80; color: white; border-color: #22c55e;}
-#stopBtn { background: #f87171; color: white; border-color: #ef4444;}
-#viewBtn { background: #a855f7; color: white; border-color: #9333ea;}
+#startBtn { background: #4ade80; color: white; border: none; }
+#stopBtn { background: #f87171; color: white; border: none; }
+#viewBtn { background: #a855f7; color: white; border: none; }
+#resetBtn { background: #3b82f6; color: white; border: none; }
+#homeBtn { background: #f1f5f9; font-size: 18px; border: none; }
+#settingsBtn { background: #f1f5f9; font-size: 18px; border: none; }
 
 /* =========================
-TEAMS ARENA & EQUAL HEIGHT BOXES
+TEAMS AREA (AUTOFITTING GRID)
 ========================= */
 #teamsContainer {
-    display: flex;
-    width: 100vw;
-    height: calc(100vh - 75px);
-    gap: 15px;
-    padding: 15px;
-    overflow-x: auto;
-    background: #f0f4f8;
+    display: flex; width: 100vw; height: calc(100vh - 75px);
+    gap: 15px; padding: 15px; overflow-x: auto; overflow-y: hidden;
+    background: var(--bg-color); transition: all 0.3s ease;
 }
 
 .team {
-    flex: 1 1 300px;
-    min-width: 300px; 
-    background: white;
-    border-radius: 16px;
-    display: flex;
-    flex-direction: column;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-    border: 1px solid #e2e8f0;
+    flex: 1 1 280px; min-width: 280px; background: var(--card-bg);
+    border-radius: 16px; display: flex; flex-direction: column; overflow: hidden;
+    box-shadow: var(--shadow-sm); border: 1px solid #e2e8f0; height: 100%;
 }
 
 .teamHeader {
-    text-align: center;
-    padding: 10px;
-    color: white;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-radius: 15px 15px 0 0;
+    text-align: center; padding: 8px 12px; color: white; flex-shrink: 0;
+    display: flex; justify-content: space-between; align-items: center;
 }
 
-.teamScoreBadge {
-    background: rgba(255,255,255,0.3);
-    padding: 4px 12px;
-    border-radius: 12px;
-    font-size: 14px;
-}
+.teamTitle { font-size: 18px; font-weight: 800; display: flex; align-items: center; gap: 10px; }
+.score { font-size: 13px; font-weight: 600; background: rgba(255,255,255,0.3); padding: 4px 10px; border-radius: 10px; }
 
 .teamCheckBtn {
-    background: #fff;
-    color: #333;
-    border: none;
-    border-radius: 8px;
-    padding: 6px 12px;
-    font-family: inherit;
-    font-weight: 800;
-    cursor: pointer;
-    box-shadow: 0 2px 0 rgba(0,0,0,0.2);
+    background: white; color: #333; border: none; border-radius: 8px;
+    padding: 6px 12px; font-family: inherit; font-weight: 800; cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: transform 0.1s;
 }
-.teamCheckBtn:active { transform: translateY(2px); box-shadow: none; }
+.teamCheckBtn:active { transform: scale(0.95); }
 
-/* Exact Sizing for Pools and Boxes */
+/* =========================
+DYNAMIC LAYOUT SIZING
+========================= */
 .boxContainer {
-    display: flex;
-    gap: 10px;
-    padding: 10px;
-    height: 45%; /* Match height with pool */
-}
-
-.dropBox {
-    flex: 1;
-    border-radius: 12px;
-    padding: 8px;
-    background-color: #f8fafc; 
-    border: 3px dashed #cbd5e1;
-    overflow-y: auto;
-    transition: background 0.2s ease;
-    display: flex;
-    flex-direction: column;
-}
-
-.dropBox h2 {
-    text-align: center;
-    margin-bottom: 8px;
-    background: rgba(255, 255, 255, 0.9); 
-    padding: 5px;
-    border-radius: 8px;
-    font-size: 16px;
-    text-transform: uppercase;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-}
-
-.itemGrid {
-    display: grid; 
-    grid-template-columns: repeat(auto-fill, minmax(65px, 1fr));
-    gap: 6px;
+    display: flex; gap: 10px; padding: 10px; flex: 1; /* 50% split */
+    transition: flex 0.4s cubic-bezier(0.4, 0, 0.2, 1); min-height: 0;
 }
 
 .itemPool {
-    height: 45%; /* Match height with drop boxes */
-    background: #f1f5f9;
-    padding: 10px;
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(65px, 1fr));
-    gap: 8px;
-    overflow-y: auto;
-    border-top: 3px solid #e2e8f0;
-    align-content: start;
+    flex: 1; /* 50% split */
+    background: #f1f5f9; padding: 10px; display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(65px, 1fr)); gap: 8px;
+    overflow-y: auto; border-top: 2px solid #e2e8f0; align-content: start;
+    transition: flex 0.4s cubic-bezier(0.4, 0, 0.2, 1); min-height: 0;
 }
 
-.dropBox.drag-over, .itemPool.drag-over { background: #e2e8f0 !important; border-color: #94a3b8; }
+/* Auto-Expand CSS */
+#teamsContainer.view-expanded .boxContainer { flex: 3; }
+#teamsContainer.view-expanded .itemPool { flex: 0.4; }
 
 /* =========================
-DRAGGABLE ITEMS & MYSTERY MODE
+DROP BOXES & GRID
+========================= */
+.dropBox {
+    flex: 1; border-radius: 12px; padding: 10px; overflow-y: auto;
+    background-color: #f8fafc; background-size: cover; background-position: center;
+    border: 2px dashed #cbd5e1; display: flex; flex-direction: column; transition: 0.2s ease;
+}
+.dropBox.drag-over { background-color: #e2e8f0; border-color: #94a3b8; }
+.dropBox h2 {
+    text-align: center; margin-bottom: 8px; color: #333; background: rgba(255, 255, 255, 0.9);
+    padding: 5px; border-radius: 8px; font-size: 14px; font-weight: 800; flex-shrink: 0;
+}
+
+.itemGrid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+    gap: 6px; width: 100%;
+}
+
+/* =========================
+ITEMS & HIDDEN LOGIC
 ========================= */
 .item {
-    background: white;
-    border-radius: 10px;
-    padding: 6px 4px;
-    text-align: center;
-    cursor: grab;
-    border: 2px solid #e2e8f0;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 70px;
-    width: 100%;
-    position: relative;
-    touch-action: none;
+    background: white; border-radius: 10px; padding: 6px 4px; text-align: center;
+    border: 1px solid #e2e8f0; box-shadow: 0 2px 4px rgba(0,0,0,0.05); display: flex;
+    flex-direction: column; align-items: center; justify-content: center; height: 70px;
+    width: 100%; touch-action: none; cursor: grab;
 }
-
 .item img { width: 35px; height: 35px; object-fit: contain; pointer-events: none; }
-.item span { font-size: 11px; margin-top: 4px; pointer-events: none; }
+.item span { display: block; margin-top: 4px; font-size: 10px; font-weight: 600; pointer-events: none; }
 
-/* Mystery Hiding CSS Logic */
-.team.hidden-items .dropBox .item {
-    background: #34495e;
-    border-color: #2c3e50;
-}
-.team.hidden-items .dropBox .item img, 
-.team.hidden-items .dropBox .item span {
-    display: none;
-}
-.team.hidden-items .dropBox .item::after {
-    content: '❓';
-    font-size: 28px;
-    color: white;
-}
+/* HIDES ITEMS IN DROPPED BOXES */
+.team.hidden-items .dropBox .item { display: none !important; }
 
 /* Dragging Ghost Overlay */
 .item.dragging-ghost {
-    position: fixed;
-    z-index: 999999 !important;
-    width: 75px !important;
-    height: 75px !important;
-    pointer-events: none;
-    box-shadow: 0 10px 20px rgba(0,0,0,0.15);
-    transform: scale(1.1);
-    opacity: 0.9;
+    position: fixed; z-index: 999999 !important; width: 75px !important; height: 75px !important;
+    pointer-events: none; box-shadow: 0 10px 20px rgba(0,0,0,0.15); transform: scale(1.05); opacity: 0.9;
 }
 
-/* Validation Feedback */
-.correct { border: 4px solid #4ade80 !important; background: #f0fdf4 !important; }
-.wrong { border: 4px solid #f87171 !important; background: #fef2f2 !important; animation: shake 0.3s ease; }
+.correct { outline: 4px solid #4ade80 !important; outline-offset: -2px; background: #f0fdf4 !important; }
+.wrong { outline: 4px solid #f87171 !important; outline-offset: -2px; background: #fef2f2 !important; animation: shake 0.3s ease; }
 @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-4px); } 75% { transform: translateX(4px); } }
 
 /* =========================
-TEACHER DASHBOARD
+SETTINGS PANEL
 ========================= */
-#dashboard {
+#settingsPanel {
     position: fixed; right: -450px; top: 0; width: 400px; max-width: 100%; height: 100vh;
-    background: white; transition: right 0.4s ease; overflow-y: auto; padding: 30px;
-    box-shadow: -10px 0 30px rgba(0,0,0,0.1); z-index: 999999;
+    background: white; transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1); overflow-y: auto;
+    padding: 30px; box-shadow: -10px 0 30px rgba(0,0,0,0.1); z-index: 999999;
 }
-#dashboard.active { right: 0; }
-
-.settingGroup { margin-bottom: 25px; }
-.settingGroup h3 { margin-bottom: 12px; font-size: 16px; border-bottom: 2px solid #f1f5f9; padding-bottom: 5px; }
-.settingGroup input, .settingGroup select, .settingGroup button {
-    width: 100%; padding: 10px; margin-bottom: 10px; border: 2px solid #cbd5e1;
-    border-radius: 8px; font-family: inherit; font-weight: bold; font-size: 14px;
-}
+#settingsPanel.active { right: 0; }
 
 #closeSettings {
-    position: absolute; top: 20px; right: 20px; width: 40px; height: 40px;
-    border: none; border-radius: 50%; background: #f1f5f9; font-size: 18px; font-weight: bold; cursor: pointer;
+    position: absolute; top: 20px; right: 20px; width: 36px; height: 36px; border: none;
+    border-radius: 50%; background: #f1f5f9; font-size: 18px; cursor: pointer;
 }
+#closeSettings:hover { background: #e2e8f0; color: red; }
 
-.itemEditor { border: 2px solid #e2e8f0; padding: 15px; border-radius: 12px; margin-bottom: 15px; background: #f8fafc; }
-.itemEditor img { width: 50px; height: 50px; object-fit: contain; display: block; margin: 0 auto 10px; }
-.deleteItemBtn { background: #fee2e2 !important; color: #ef4444 !important; border-color: #fca5a5 !important; }
+.settingGroup { margin-bottom: 25px; }
+.settingGroup h3 { margin-bottom: 12px; font-size: 15px; color: #475569; border-bottom: 2px solid #f1f5f9; padding-bottom: 5px; }
+.settingGroup input, .settingGroup select, .settingGroup button {
+    width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #cbd5e1;
+    border-radius: 8px; font-family: inherit; font-size: 13px; min-height: 40px;
+}
+.settingGroup button { cursor: pointer; font-weight: 600; background: #f8fafc; }
+.settingGroup button:hover { background: #e2e8f0; }
 
-::-webkit-scrollbar { width: 8px; }
-::-webkit-scrollbar-track { background: #f1f5f9; }
+.font-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.font-grid select, .font-grid input { margin-bottom: 0; }
+
+#saveSettingsBtn { background: #3b82f6; color: white; border: none; padding: 12px; font-size: 14px;}
+#saveSettingsBtn:hover { background: #2563eb; }
+
+.itemEditor { border: 1px solid #e2e8f0; padding: 15px; border-radius: 12px; margin-bottom: 15px; background: #f8fafc; }
+.itemEditor img { width: 50px; height: 50px; object-fit: contain; display: block; margin: 0 auto 10px auto; border-radius: 8px; background: white; padding: 5px; box-shadow: var(--shadow-sm); }
+.deleteItemBtn { background: #fee2e2 !important; color: #ef4444 !important; border: 1px solid #fca5a5 !important; }
+
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 4px; }
 ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
 </style>
 </head>
 <body>
 
-<!-- START SCREEN -->
-<div id="screen-start" class="screen">
-    <h1 id="startTitle" style="font-size: 4rem; color: white; text-shadow: 0 5px 15px rgba(0,0,0,0.2);">Needs vs Wants</h1>
-    <h2 id="startSub" style="font-size: 1.8rem; margin-bottom: 30px; opacity: 0.9;">Sanxing Sparks Challenge</h2>
-    <button class="btn-large" onclick="Game.start()">START RACE</button>
+<!-- HOME PAGE -->
+<div id="homePage">
+    <video id="homeVideoBg" class="home-bg-layer" autoplay loop muted playsinline></video>
+    <div id="homeImageBg" class="home-bg-layer"></div>
+
+    <div id="homeCard">
+        <h1 id="homeTitle">Needs vs Wants</h1>
+        <p id="homeSubtitle">Fun Classroom Sorting Competition</p>
+        <button id="enterBtn">START GAME</button>
+    </div>
 </div>
 
 <!-- GAME PAGE -->
 <div id="gamePage">
     <header>
-        <h1 id="gameTitle">Needs vs Wants: Sanxing Challenge</h1>
+        <div class="leftHeader">
+            <h1 id="gameTitle">Needs vs Wants</h1>
+        </div>
+        
         <div id="topTimer">01:00</div>
         
         <div class="controls">
-            <select id="teamCount">
+            <select id="teamCount" title="Number of Teams">
                 <option>1</option><option>2</option><option>3</option>
                 <option>4</option><option>5</option><option selected>6</option>
             </select>
-            <input type="number" id="timerInput" value="60" style="width:70px;">
+            <input type="number" id="timerInput" value="60" style="width:60px;" title="Seconds">
             <button id="startBtn">START</button>
             <button id="stopBtn">STOP</button>
-            <button id="viewBtn" onclick="Game.toggleGlobalView()">👁️ VIEW ALL</button>
-            <button id="resetBtn" onclick="Game.reset()">🔄 RESET</button>
-            <button id="settingsBtn" onclick="Dashboard.toggle()">⚙️ EDIT</button>
+            <button id="viewBtn">👁️ VIEW ALL</button>
+            <button id="resetBtn">🔄 RESET</button>
+            <button id="homeBtn" title="Home">🏠</button>
+            <button id="settingsBtn" title="Settings">⚙️</button>
         </div>
     </header>
 
     <div id="teamsContainer"></div>
 </div>
 
-<!-- TEACHER DASHBOARD -->
-<div id="dashboard">
-    <button id="closeSettings" onclick="Dashboard.toggle()">✕</button>
-    
-    <div class="settingGroup" style="margin-top: 30px;">
-        <button style="background: #3b82f6; color: white;" onclick="Dashboard.save()">SAVE SETTINGS & APPLY</button>
+<!-- SETTINGS PANEL -->
+<div id="settingsPanel">
+    <button id="closeSettings">✕</button>
+    <div class="settingGroup">
+        <button id="saveSettingsBtn">SAVE SETTINGS & APPLY</button>
     </div>
 
     <div class="settingGroup">
-        <h3>Game Titles</h3>
-        <input type="text" id="cfgTitle" value="Needs vs Wants">
-        <input type="text" id="cfgSubtitle" value="Sanxing Sparks Challenge">
+        <h3>Homepage Background</h3>
+        <input type="file" id="homeMediaUpload" accept="image/*,video/*">
     </div>
 
     <div class="settingGroup">
-        <h3>Vocabulary Items</h3>
+        <h3>1. Homepage Texts & Fonts</h3>
+        <input type="text" id="homeTitleInput" placeholder="Homepage Title">
+        <input type="text" id="homeSubtitleInput" placeholder="Homepage Subtitle">
+        <div class="font-grid">
+            <select id="homeFontFamily">
+                <option value="'Poppins', Arial">Poppins</option><option value="Arial">Arial</option>
+                <option value="'Century Gothic', sans-serif">Century Gothic</option><option value="'Comic Sans MS', cursive">Comic Sans MS</option>
+            </select>
+            <input type="color" id="homeFontColor" value="#ffffff">
+            <input type="number" id="homeTitleSize" value="64" placeholder="Title Size">
+            <input type="number" id="homeSubtitleSize" value="24" placeholder="Subtitle Size">
+        </div>
+    </div>
+
+    <div class="settingGroup">
+        <h3>2. Game Title Texts & Fonts</h3>
+        <input type="text" id="gameTitleInput" placeholder="Game Title">
+        <div class="font-grid">
+            <select id="gameTitleFont">
+                <option value="'Poppins', Arial">Poppins</option><option value="Arial">Arial</option>
+                <option value="'Century Gothic', sans-serif">Century Gothic</option><option value="'Comic Sans MS', cursive">Comic Sans MS</option>
+            </select>
+            <input type="color" id="gameTitleColor" value="#333333">
+            <input type="number" id="gameTitleSize" value="28" placeholder="Size">
+        </div>
+    </div>
+
+    <div class="settingGroup">
+        <h3>3. General Game Fonts</h3>
+        <div class="font-grid">
+            <select id="fontFamily">
+                <option value="'Poppins', Arial">Poppins</option><option value="Arial">Arial</option>
+                <option value="'Century Gothic', sans-serif">Century Gothic</option><option value="'Comic Sans MS', cursive">Comic Sans MS</option>
+            </select>
+            <input type="color" id="fontColor" value="#333333">
+            <input type="number" id="fontSize" value="14" placeholder="Size">
+        </div>
+    </div>
+
+    <div class="settingGroup">
+        <h3>Box Names & Backgrounds</h3>
+        <input type="text" id="needsTextInput" placeholder="Needs Box Name">
+        <label style="font-size: 11px;">Needs Box Background:</label>
+        <input type="file" id="needsBgUpload" accept="image/*">
+        
+        <input type="text" id="wantsTextInput" placeholder="Wants Box Name" style="margin-top: 10px;">
+        <label style="font-size: 11px;">Wants Box Background:</label>
+        <input type="file" id="wantsBgUpload" accept="image/*">
+    </div>
+
+    <div class="settingGroup">
+        <h3>Items Editor</h3>
         <div id="itemsEditor"></div>
-        <button style="background: #2ecc71; color: white;" onclick="Dashboard.addItem()">+ ADD ITEM</button>
+        <button id="addItemBtn" style="background:#2ecc71; color:white;">+ ADD ITEM</button>
     </div>
 
     <div class="settingGroup">
-        <h3>Save/Load Lesson</h3>
-        <button onclick="Dashboard.export()">💾 EXPORT JSON</button>
-        <button onclick="document.getElementById('importInput').click()">📂 IMPORT JSON</button>
-        <input type="file" id="importInput" accept=".json" style="display:none" onchange="Dashboard.import(event)">
+        <h3>Data Management</h3>
+        <button id="exportBtn">EXPORT JSON</button>
+        <input type="file" id="importInput" accept=".json" style="display:none;">
+        <button onclick="document.getElementById('importInput').click()">IMPORT JSON</button>
     </div>
 </div>
 
 <script>
 /* =========================
-AUDIO SYNTHESIS
+AUDIO SYNTHESIS STATE
 ========================= */
-const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-const playTone = (isCorrect) => {
-    if (audioCtx.state === 'suspended') audioCtx.resume();
-    const osc = audioCtx.createOscillator();
-    const gain = audioCtx.createGain();
+const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+function playSound(isCorrect) {
+    if (audioContext.state === 'suspended') audioContext.resume();
+    const osc = audioContext.createOscillator();
+    const gainNode = audioContext.createGain();
     
-    osc.connect(gain); gain.connect(audioCtx.destination);
+    osc.connect(gainNode); gainNode.connect(audioContext.destination);
     
     if (isCorrect) {
         osc.type = 'sine';
-        osc.frequency.setValueAtTime(587.33, audioCtx.currentTime); 
-        osc.frequency.setValueAtTime(880, audioCtx.currentTime + 0.1); 
-        gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+        osc.frequency.setValueAtTime(587.33, audioContext.currentTime); 
+        osc.frequency.setValueAtTime(880, audioContext.currentTime + 0.1); 
+        gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
     } else {
         osc.type = 'sawtooth';
-        osc.frequency.setValueAtTime(180, audioCtx.currentTime);
-        osc.frequency.linearRampToValueAtTime(120, audioCtx.currentTime + 0.25);
-        gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.25);
+        osc.frequency.setValueAtTime(180, audioContext.currentTime);
+        osc.frequency.linearRampToValueAtTime(120, audioContext.currentTime + 0.25);
+        gainNode.gain.setValueAtTime(0.15, audioContext.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.25);
     }
-    osc.start(); osc.stop(audioCtx.currentTime + 0.3);
+    osc.start(); osc.stop(audioContext.currentTime + 0.3);
+}
+
+/* =========================
+SETTINGS & DATA
+========================= */
+let settings = {
+    homeBgType: "default", homeBgData: "",
+    homeTitle: "Needs vs Wants", homeSubtitle: "Fun Classroom Sorting Competition",
+    homeFontFamily: "'Poppins', Arial", homeTitleSize: "64", homeSubtitleSize: "24", homeFontColor: "#ffffff",
+    gameTitle: "Needs vs Wants", gameTitleFont: "'Poppins', Arial", gameTitleSize: "28", gameTitleColor: "#333333",
+    fontFamily: "'Poppins', Arial", fontSize: "14", fontColor: "#333333",
+    needsText: "NEEDS", wantsText: "WANTS", needsBg: "", wantsBg: ""
 };
 
-/* =========================
-GAME ENGINE
-========================= */
-const Game = (() => {
-    const teamColors = ["#ff4757", "#2e86de", "#10ac84", "#feca57", "#5f27cd", "#ff9f43"];
-    let globalView = false;
-    let timerInterval;
+const teamColors = ["#ff7675", "#74b9ff", "#55efc4", "#ffeaa7", "#a29bfe", "#fd79a8"];
 
-    let items = [
-        { name: "Water", category: "needs", image: "https://cdn-icons-png.flaticon.com/512/824/824239.png" },
-        { name: "Phone", category: "wants", image: "https://cdn-icons-png.flaticon.com/512/545/545245.png" },
-        { name: "Food", category: "needs", image: "https://cdn-icons-png.flaticon.com/512/1046/1046784.png" },
-        { name: "Game", category: "wants", image: "https://cdn-icons-png.flaticon.com/512/686/686588.png" },
-        { name: "Clothes", category: "needs", image: "https://cdn-icons-png.flaticon.com/512/3159/3159614.png" },
-        { name: "Candy", category: "wants", image: "https://cdn-icons-png.flaticon.com/512/2821/2821808.png" }
-    ];
+let items = [
+    { name: "Food", category: "needs", image: "https://cdn-icons-png.flaticon.com/512/1046/1046784.png" },
+    { name: "Water", category: "needs", image: "https://cdn-icons-png.flaticon.com/512/824/824239.png" },
+    { name: "Medicine", category: "needs", image: "https://cdn-icons-png.flaticon.com/512/3063/3063206.png" },
+    { name: "Toy", category: "wants", image: "https://cdn-icons-png.flaticon.com/512/3082/3082037.png" },
+    { name: "Phone", category: "wants", image: "https://cdn-icons-png.flaticon.com/512/545/545245.png" },
+    { name: "Candy", category: "wants", image: "https://cdn-icons-png.flaticon.com/512/2821/2821808.png" }
+];
 
-    const shuffle = (array) => {
-        let m = array.length, t, i;
-        while (m) { i = Math.floor(Math.random() * m--); t = array[m]; array[m] = array[i]; array[i] = t; }
-        return array;
-    };
-
-    const setupPhysics = (el) => {
-        let ghost = null, startParent = null, currentBox = null;
-
-        el.addEventListener('pointerdown', (e) => {
-            e.preventDefault();
-            el.releasePointerCapture(e.pointerId);
-            if (audioCtx.state === 'suspended') audioCtx.resume();
-
-            startParent = el.parentElement;
-            el.style.visibility = 'hidden';
-
-            ghost = el.cloneNode(true);
-            ghost.className = 'item dragging-ghost';
-            
-            // Remove mystery box graphic if dragging from a hidden state
-            const spans = ghost.querySelectorAll('span, img');
-            spans.forEach(s => s.style.display = 'block');
-            
-            document.body.appendChild(ghost);
-            move(e.clientX, e.clientY);
-
-            function move(x, y) {
-                ghost.style.left = `${x - 37.5}px`;
-                ghost.style.top = `${y - 37.5}px`;
-            }
-
-            function onMove(ev) {
-                move(ev.clientX, ev.clientY);
-                ghost.style.visibility = 'hidden';
-                let target = document.elementFromPoint(ev.clientX, ev.clientY);
-                ghost.style.visibility = 'visible';
-
-                if (!target) return;
-                let box = target.closest('.dropBox') || target.closest('.itemPool');
-                
-                if (currentBox) currentBox.classList.remove('drag-over');
-
-                if (box) {
-                    let teamId = box.closest('.team').dataset.team;
-                    if (el.dataset.team === teamId) {
-                        currentBox = box;
-                        currentBox.classList.add('drag-over');
-                    }
-                } else currentBox = null;
-            }
-
-            function onUp() {
-                window.removeEventListener('pointermove', onMove);
-                window.removeEventListener('pointerup', onUp);
-
-                if (currentBox) {
-                    currentBox.classList.remove('drag-over');
-                    if (currentBox.classList.contains('dropBox')) {
-                        currentBox.querySelector('.itemGrid').appendChild(el);
-                    } else currentBox.appendChild(el);
-                    el.classList.remove("correct", "wrong");
-                } else startParent.appendChild(el);
-
-                el.style.visibility = 'visible';
-                if (ghost) ghost.remove();
-            }
-
-            window.addEventListener('pointermove', onMove);
-            window.addEventListener('pointerup', onUp);
-        });
-    };
-
-    const buildTeams = () => {
-        const container = document.getElementById("teamsContainer");
-        container.innerHTML = "";
-        const count = parseInt(document.getElementById("teamCount").value);
-
-        for(let i=1; i<=count; i++) {
-            const color = teamColors[(i-1) % teamColors.length];
-            const team = document.createElement("div");
-            team.className = `team ${globalView ? '' : 'hidden-items'}`;
-            team.dataset.team = i; 
-
-            team.innerHTML = `
-                <div class="teamHeader" style="background: ${color};">
-                    <div>TEAM ${i} <span class="teamScoreBadge">⭐ <span class="scoreNum">0</span></span></div>
-                    <button class="teamCheckBtn" onclick="Game.checkTeam(${i})">CHECK TEAM</button>
-                </div>
-                <div class="boxContainer">
-                    <div class="dropBox" data-category="needs"><h2>NEEDS</h2><div class="itemGrid"></div></div>
-                    <div class="dropBox" data-category="wants"><h2>WANTS</h2><div class="itemGrid"></div></div>
-                </div>
-                <div class="itemPool"></div>
-            `;
-            container.appendChild(team);
-            
-            const pool = team.querySelector(".itemPool");
-            shuffle([...items]).forEach((item, idx) => {
-                const div = document.createElement("div");
-                div.className = "item";
-                div.dataset.category = item.category;
-                div.dataset.team = i; 
-                div.innerHTML = `<img src="${item.image}"><span>${item.name}</span>`;
-                setupPhysics(div);
-                pool.appendChild(div);
-            });
-        }
-    };
-
-    const timerObj = {
-        start: () => {
-            clearInterval(timerInterval);
-            let t = parseInt(document.getElementById("timerInput").value);
-            timerObj.update(t);
-            timerInterval = setInterval(() => {
-                t--; timerObj.update(t);
-                if(t <= 0) { clearInterval(timerInterval); playTone(false); }
-            }, 1000);
-        },
-        stop: () => clearInterval(timerInterval),
-        update: (t) => {
-            if(isNaN(t) || t < 0) t = 0;
-            document.getElementById("topTimer").innerText = 
-                `${Math.floor(t/60).toString().padStart(2,"0")}:${(t%60).toString().padStart(2,"0")}`;
-        }
-    };
-
-    document.getElementById("startBtn").addEventListener("click", timerObj.start);
-    document.getElementById("stopBtn").addEventListener("click", timerObj.stop);
-    document.getElementById("teamCount").addEventListener("change", buildTeams);
-
-    return {
-        start: () => {
-            document.getElementById('screen-start').style.opacity = '0';
-            setTimeout(() => document.getElementById('screen-start').style.display = 'none', 500);
-            buildTeams();
-        },
-        reset: () => {
-            globalView = false;
-            buildTeams();
-            timerObj.update(parseInt(document.getElementById("timerInput").value));
-        },
-        toggleGlobalView: () => {
-            globalView = !globalView;
-            document.querySelectorAll('.team').forEach(t => t.classList.toggle('hidden-items', !globalView));
-        },
-        checkTeam: (id) => {
-            const team = document.querySelector(`.team[data-team="${id}"]`);
-            team.classList.remove('hidden-items'); // Reveal the mystery boxes!
-            
-            let score = 0, mistakes = 0;
-            team.querySelectorAll(".dropBox").forEach(box => {
-                const target = box.dataset.category;
-                box.querySelectorAll(".item").forEach(item => {
-                    item.classList.remove("correct", "wrong");
-                    if(item.dataset.category === target) {
-                        item.classList.add("correct"); score++;
-                    } else {
-                        item.classList.add("wrong"); mistakes++;
-                    }
-                });
-            });
-            team.querySelector(".scoreNum").innerText = score;
-            playTone(mistakes === 0 && score > 0);
-        },
-        getItems: () => items,
-        setItems: (newItems) => { items = newItems; }
-    };
-})();
+function shuffleArray(array) {
+    let m = array.length, t, i;
+    while (m) { i = Math.floor(Math.random() * m--); t = array[m]; array[m] = array[i]; array[i] = t; }
+    return array;
+}
 
 /* =========================
-TEACHER DASHBOARD
+CORE LOGIC & UNIVERSAL TOUCH DRAG
 ========================= */
-const Dashboard = (() => {
-    const render = () => {
-        const editor = document.getElementById("itemsEditor");
-        editor.innerHTML = "";
-        Game.getItems().forEach((it, i) => {
+function createTeams() {
+    const container = document.getElementById("teamsContainer");
+    container.innerHTML = "";
+    container.classList.remove('view-expanded'); // Reset view mode
+    const count = parseInt(document.getElementById("teamCount").value);
+
+    for(let i=1; i<=count; i++) {
+        const teamColor = teamColors[(i-1) % teamColors.length];
+        const team = document.createElement("div");
+        // Apply hidden class by default
+        team.className = "team hidden-items"; 
+        team.dataset.team = i; 
+        
+        const nBg = settings.needsBg ? `background-image: url('${settings.needsBg}');` : '';
+        const wBg = settings.wantsBg ? `background-image: url('${settings.wantsBg}');` : '';
+
+        team.innerHTML = `
+            <div class="teamHeader" style="background: ${teamColor};">
+                <div class="teamTitle">TEAM ${i} <span class="score">⭐ <span class="teamScore">0</span></span></div>
+                <button class="teamCheckBtn" onclick="checkTeam(${i})">CHECK TEAM</button>
+            </div>
+            <div class="boxContainer">
+                <div class="dropBox" data-category="needs" style="${nBg}">
+                    <h2 class="boxText">${settings.needsText}</h2>
+                    <div class="itemGrid"></div>
+                </div>
+                <div class="dropBox" data-category="wants" style="${wBg}">
+                    <h2 class="boxText">${settings.wantsText}</h2>
+                    <div class="itemGrid"></div>
+                </div>
+            </div>
+            <div class="itemPool"></div>
+        `;
+        container.appendChild(team);
+        
+        const pool = team.querySelector(".itemPool");
+        const shuffledItems = shuffleArray([...items]);
+        
+        shuffledItems.forEach((item, index) => {
             const div = document.createElement("div");
-            div.className = "itemEditor";
-            div.innerHTML = `
-                <img src="${it.image}">
-                <input type="text" value="${it.name}" onchange="Dashboard.update(${i}, 'name', this.value)">
-                <select onchange="Dashboard.update(${i}, 'category', this.value)">
-                    <option value="needs" ${it.category === "needs" ? "selected" : ""}>Needs</option>
-                    <option value="wants" ${it.category === "wants" ? "selected" : ""}>Wants</option>
-                </select>
-                <input type="file" accept="image/*" onchange="Dashboard.upload(event, ${i})">
-                <button class="deleteItemBtn" onclick="Dashboard.remove(${i})">DELETE ITEM</button>
-            `;
-            editor.appendChild(div);
+            div.className = "item";
+            div.dataset.category = item.category;
+            div.dataset.team = i; 
+            div.innerHTML = `<img src="${item.image}"><span class="itemText">${item.name}</span>`;
+            setupPointerEvents(div);
+            pool.appendChild(div);
         });
-    };
+    }
+    applyFonts(); applyHomeBackground();
+}
 
-    return {
-        toggle: () => {
-            const p = document.getElementById('dashboard');
-            p.classList.toggle('active');
-            if(p.classList.contains('active')) render();
-        },
-        addItem: () => {
-            const items = Game.getItems();
-            items.push({ name: "New", category: "needs", image: "https://cdn-icons-png.flaticon.com/512/992/992651.png" });
-            Game.setItems(items); render();
-        },
-        remove: (i) => {
-            const items = Game.getItems(); items.splice(i, 1);
-            Game.setItems(items); render();
-        },
-        update: (i, k, v) => {
-            const items = Game.getItems(); items[i][k] = v;
-            Game.setItems(items);
-        },
-        upload: (e, i) => {
-            const file = e.target.files[0];
-            if(!file) return;
-            const r = new FileReader();
-            r.onload = (ev) => {
-                const items = Game.getItems();
-                items[i].image = ev.target.result;
-                Game.setItems(items); render();
-            };
-            r.readAsDataURL(file);
-        },
-        save: () => {
-            const title = document.getElementById("cfgTitle").value;
-            const sub = document.getElementById("cfgSubtitle").value;
+function setupPointerEvents(itemEl) {
+    let ghostEl = null, startParent = null, currentOverBox = null;
+
+    itemEl.addEventListener('pointerdown', (e) => {
+        e.preventDefault();
+        itemEl.releasePointerCapture(e.pointerId); 
+        if (audioContext.state === 'suspended') audioContext.resume();
+
+        startParent = itemEl.parentElement;
+        itemEl.style.visibility = 'hidden';
+
+        ghostEl = itemEl.cloneNode(true);
+        ghostEl.className = 'item dragging-ghost';
+        // Always show graphic during drag
+        ghostEl.style.display = 'flex';
+        document.body.appendChild(ghostEl);
+
+        moveGhost(e.clientX, e.clientY);
+        function moveGhost(x, y) { ghostEl.style.left = `${x - 37.5}px`; ghostEl.style.top = `${y - 37.5}px`; }
+
+        function onPointerMove(ev) {
+            moveGhost(ev.clientX, ev.clientY);
+            ghostEl.style.visibility = 'hidden';
+            let target = document.elementFromPoint(ev.clientX, ev.clientY);
+            ghostEl.style.visibility = 'visible';
+
+            if (!target) return;
+            let targetBox = target.closest('.dropBox') || target.closest('.itemPool');
             
-            document.getElementById("startTitle").innerText = title;
-            document.getElementById("startSub").innerText = sub;
-            document.getElementById("gameTitle").innerText = `${title}: ${sub}`;
-            
-            Game.reset();
-            Dashboard.toggle();
-        },
-        export: () => {
-            const data = { 
-                title: document.getElementById("cfgTitle").value, 
-                sub: document.getElementById("cfgSubtitle").value, 
-                items: Game.getItems() 
-            };
-            const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
-            const link = document.createElement("a");
-            link.href = URL.createObjectURL(blob);
-            link.download = "sanxing_needs_wants.json";
-            link.click();
-        },
-        import: (e) => {
-            const file = e.target.files[0];
-            if(!file) return;
-            const reader = new FileReader();
-            reader.onload = (ev) => {
-                const data = JSON.parse(ev.target.result);
-                document.getElementById("cfgTitle").value = data.title || "Needs vs Wants";
-                document.getElementById("cfgSubtitle").value = data.sub || "Classroom Challenge";
-                Game.setItems(data.items);
-                render();
-            };
-            reader.readAsText(file);
+            if (currentOverBox) currentOverBox.classList.remove('drag-over');
+
+            if (targetBox) {
+                let boxTeam = targetBox.closest('.team').dataset.team;
+                if (itemEl.dataset.team === boxTeam) {
+                    currentOverBox = targetBox;
+                    currentOverBox.classList.add('drag-over');
+                    return;
+                }
+            }
+            currentOverBox = null;
         }
-    };
-})();
+
+        function onPointerUp(ev) {
+            window.removeEventListener('pointermove', onPointerMove);
+            window.removeEventListener('pointerup', onPointerUp);
+
+            if (currentOverBox) {
+                currentOverBox.classList.remove('drag-over');
+                if (currentOverBox.classList.contains('dropBox')) {
+                    currentOverBox.querySelector('.itemGrid').appendChild(itemEl);
+                } else currentOverBox.appendChild(itemEl);
+                itemEl.classList.remove("correct", "wrong");
+            } else startParent.appendChild(itemEl);
+
+            itemEl.style.visibility = 'visible';
+            if (ghostEl) { ghostEl.remove(); ghostEl = null; }
+            currentOverBox = null;
+        }
+        window.addEventListener('pointermove', onPointerMove);
+        window.addEventListener('pointerup', onPointerUp);
+    });
+}
+
+/* =========================
+FONTS & BACKGROUND
+========================= */
+function applyFonts() {
+    const ht = document.getElementById("homeTitle"); const hs = document.getElementById("homeSubtitle");
+    ht.style.fontFamily = settings.homeFontFamily; ht.style.fontSize = settings.homeTitleSize + "px"; ht.style.color = settings.homeFontColor;
+    hs.style.fontFamily = settings.homeFontFamily; hs.style.fontSize = settings.homeSubtitleSize + "px"; hs.style.color = settings.homeFontColor;
+
+    const gt = document.getElementById("gameTitle");
+    gt.style.fontFamily = settings.gameTitleFont; gt.style.fontSize = settings.gameTitleSize + "px"; gt.style.color = settings.gameTitleColor;
+
+    document.querySelectorAll(".teamTitle, .score, .item span, .boxText").forEach(el => {
+        el.style.fontFamily = settings.fontFamily; el.style.fontSize = settings.fontSize + "px"; el.style.color = settings.fontColor;
+    });
+}
+
+function applyHomeBackground() {
+    const videoBg = document.getElementById("homeVideoBg"); const imageBg = document.getElementById("homeImageBg");
+    if (settings.homeBgType === 'video') { videoBg.src = settings.homeBgData; videoBg.style.display = 'block'; imageBg.style.display = 'none';
+    } else if (settings.homeBgType === 'image') { videoBg.style.display = 'none'; imageBg.style.display = 'block'; imageBg.style.backgroundImage = `url('${settings.homeBgData}')`;
+    } else { videoBg.style.display = 'none'; imageBg.style.display = 'block'; imageBg.style.backgroundImage = `linear-gradient(rgba(15, 32, 39, 0.7), rgba(32, 58, 67, 0.7), rgba(44, 83, 100, 0.7)), url('https://images.unsplash.com/photo-1503676260728-1c00da094a0b?q=80&w=1600')`; }
+}
+
+/* =========================
+GAME ACTIONS (CHECK & VIEW)
+========================= */
+let isExpanded = false;
+document.getElementById("viewBtn").addEventListener("click", () => {
+    const container = document.getElementById("teamsContainer");
+    isExpanded = !isExpanded;
+    
+    // Toggle Layout Expansion
+    if(isExpanded) container.classList.add("view-expanded");
+    else container.classList.remove("view-expanded");
+
+    // Reveal hidden items globally
+    document.querySelectorAll(".team").forEach(team => {
+        if(isExpanded) team.classList.remove("hidden-items");
+        else team.classList.add("hidden-items");
+    });
+});
+
+function checkTeam(teamId) {
+    const team = document.querySelector(`.team[data-team="${teamId}"]`);
+    const container = document.getElementById("teamsContainer");
+    
+    // Auto-Expand layout to see better
+    container.classList.add("view-expanded");
+    isExpanded = true;
+    
+    // Reveal items for this team specifically
+    team.classList.remove("hidden-items");
+
+    let score = 0; let totalWrong = 0;
+    team.querySelectorAll(".dropBox").forEach(box => {
+        const expectedType = box.dataset.category;
+        box.querySelectorAll(".item").forEach(item => {
+            item.classList.remove("correct", "wrong");
+            if(item.dataset.category === expectedType) { item.classList.add("correct"); score++; } 
+            else { item.classList.add("wrong"); totalWrong++; }
+        });
+    });
+    team.querySelector(".teamScore").innerText = score;
+    playSound(totalWrong === 0 && score > 0);
+}
+
+document.getElementById("resetBtn").addEventListener("click", () => {
+    isExpanded = false;
+    createTeams(); 
+    updateTimerDisplay(parseInt(document.getElementById("timerInput").value));
+});
+
+/* =========================
+NAVIGATION & TIMER
+========================= */
+document.getElementById("homeBtn").addEventListener("click", () => {
+    document.getElementById("gamePage").style.display = "none";
+    document.getElementById("homePage").style.display = "flex";
+    clearInterval(timerInterval);
+});
+
+document.getElementById("enterBtn").addEventListener("click", () => {
+    document.getElementById("homePage").style.display = "none";
+    document.getElementById("gamePage").style.display = "flex";
+});
+
+let timerInterval;
+document.getElementById("startBtn").addEventListener("click", () => {
+    clearInterval(timerInterval);
+    let time = parseInt(document.getElementById("timerInput").value); updateTimerDisplay(time);
+    timerInterval = setInterval(() => { time--; updateTimerDisplay(time); if(time <= 0) { clearInterval(timerInterval); setTimeout(() => alert("TIME IS UP!"), 100); } }, 1000);
+});
+document.getElementById("stopBtn").addEventListener("click", () => clearInterval(timerInterval));
+
+function updateTimerDisplay(time) {
+    if(isNaN(time) || time < 0) time = 0;
+    let minutes = Math.floor(time / 60).toString().padStart(2, "0");
+    let seconds = (time % 60).toString().padStart(2, "0");
+    document.getElementById("topTimer").innerText = `${minutes}:${seconds}`;
+}
+
+/* =========================
+SETTINGS PANEL
+========================= */
+document.getElementById("settingsBtn").addEventListener("click", () => document.getElementById("settingsPanel").classList.add("active"));
+document.getElementById("closeSettings").addEventListener("click", () => document.getElementById("settingsPanel").classList.remove("active"));
+
+document.getElementById("homeMediaUpload").addEventListener("change", (e) => {
+    const file = e.target.files[0]; if(!file) return; const reader = new FileReader();
+    reader.onload = (ev) => { settings.homeBgData = ev.target.result; settings.homeBgType = file.type.startsWith('video/') ? 'video' : 'image'; };
+    reader.readAsDataURL(file);
+});
+document.getElementById("needsBgUpload").addEventListener("change", (e) => {
+    const file = e.target.files[0]; if(!file) return; const r = new FileReader(); r.onload = (ev) => { settings.needsBg = ev.target.result; }; r.readAsDataURL(file);
+});
+document.getElementById("wantsBgUpload").addEventListener("change", (e) => {
+    const file = e.target.files[0]; if(!file) return; const r = new FileReader(); r.onload = (ev) => { settings.wantsBg = ev.target.result; }; r.readAsDataURL(file);
+});
+
+document.getElementById("saveSettingsBtn").addEventListener("click", () => {
+    settings.homeTitle = document.getElementById("homeTitleInput").value || settings.homeTitle;
+    settings.homeSubtitle = document.getElementById("homeSubtitleInput").value || settings.homeSubtitle;
+    settings.homeFontFamily = document.getElementById("homeFontFamily").value; settings.homeTitleSize = document.getElementById("homeTitleSize").value;
+    settings.homeSubtitleSize = document.getElementById("homeSubtitleSize").value; settings.homeFontColor = document.getElementById("homeFontColor").value;
+
+    settings.gameTitle = document.getElementById("gameTitleInput").value || settings.gameTitle; settings.gameTitleFont = document.getElementById("gameTitleFont").value;
+    settings.gameTitleSize = document.getElementById("gameTitleSize").value; settings.gameTitleColor = document.getElementById("gameTitleColor").value;
+
+    settings.fontFamily = document.getElementById("fontFamily").value; settings.fontSize = document.getElementById("fontSize").value; settings.fontColor = document.getElementById("fontColor").value;
+    settings.needsText = document.getElementById("needsTextInput").value || settings.needsText; settings.wantsText = document.getElementById("wantsTextInput").value || settings.wantsText;
+
+    document.getElementById("homeTitle").innerText = settings.homeTitle; document.getElementById("homeSubtitle").innerText = settings.homeSubtitle; document.getElementById("gameTitle").innerText = settings.gameTitle;
+    createTeams(); alert("Settings Saved!"); document.getElementById("settingsPanel").classList.remove("active");
+});
+
+function renderItemsEditor() {
+    const editor = document.getElementById("itemsEditor"); editor.innerHTML = "";
+    items.forEach((item, index) => {
+        const div = document.createElement("div"); div.className = "itemEditor";
+        div.innerHTML = `
+            <img src="${item.image}">
+            <input type="text" value="${item.name}" placeholder="Item Name" class="itemName">
+            <select class="itemCategory">
+                <option value="needs" ${item.category === "needs" ? "selected" : ""}>Needs</option><option value="wants" ${item.category === "wants" ? "selected" : ""}>Wants</option>
+            </select>
+            <input type="file" class="itemImage" accept="image/*">
+            <button class="deleteItemBtn">DELETE ITEM</button>
+        `;
+        div.querySelector(".deleteItemBtn").addEventListener("click", () => { items.splice(index, 1); renderItemsEditor(); createTeams(); });
+        div.querySelector(".itemName").addEventListener("input", (e) => { items[index].name = e.target.value; createTeams(); });
+        div.querySelector(".itemCategory").addEventListener("change", (e) => { items[index].category = e.target.value; createTeams(); });
+        div.querySelector(".itemImage").addEventListener("change", (e) => {
+            const f = e.target.files[0]; if(!f) return; const r = new FileReader(); r.onload = function(ev) { items[index].image = ev.target.result; renderItemsEditor(); createTeams(); }; r.readAsDataURL(f);
+        });
+        editor.appendChild(div);
+    });
+}
+renderItemsEditor(); createTeams();
+
+document.getElementById("addItemBtn").addEventListener("click", () => { items.push({ name: "New Item", category: "needs", image: "https://cdn-icons-png.flaticon.com/512/992/992651.png" }); renderItemsEditor(); createTeams(); });
+
+document.getElementById("exportBtn").addEventListener("click", () => {
+    const b = new Blob([JSON.stringify({ settings, items }, null, 2)], { type: "application/json" });
+    const l = document.createElement("a"); l.href = URL.createObjectURL(b); l.download = "needs_wants_game.json"; l.click();
+});
+document.getElementById("importInput").addEventListener("change", (e) => {
+    const f = e.target.files[0]; if(!f) return; const r = new FileReader();
+    r.onload = function(ev) {
+        try {
+            const d = JSON.parse(ev.target.result); settings = d.settings || settings; items = d.items || items;
+            document.getElementById("homeTitle").innerText = settings.homeTitle; document.getElementById("homeSubtitle").innerText = settings.homeSubtitle; document.getElementById("gameTitle").innerText = settings.gameTitle;
+            createTeams(); renderItemsEditor(); alert("Game Imported!");
+        } catch(err) { alert("Error importing file."); }
+    }; r.readAsText(f);
+});
+document.getElementById("teamCount").addEventListener("change", createTeams);
 </script>
 </body>
 </html>
