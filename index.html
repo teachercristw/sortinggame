@@ -17,7 +17,7 @@ GLOBAL RESET & VARIABLES
 }
 
 :root {
-    --primary-font: 'Poppins', Arial, sans-serif;
+    --primary-font: 'Poppins', 'Century Gothic', Arial, sans-serif;
     --bg-color: #f0f4f8;
     --card-bg: #ffffff;
     --text-main: #333333;
@@ -41,40 +41,60 @@ HOME PAGE & BACKGROUNDS
 ========================= */
 #homePage {
     position: fixed; inset: 0;
-    display: flex; justify-content: center; align-items: center;
+    display: flex; flex-direction: column; align-items: center;
     z-index: 999999; overflow: hidden;
 }
 
 .home-bg-layer {
     position: absolute; inset: 0;
-    width: 100%; height: 100%; object-fit: cover; z-index: -1;
+    width: 100vw; height: 100vh; object-fit: cover; z-index: -1;
 }
 
 #homeVideoBg { display: none; }
 #homeImageBg {
-    background: linear-gradient(rgba(15, 32, 39, 0.7), rgba(32, 58, 67, 0.7), rgba(44, 83, 100, 0.7)),
+    background: linear-gradient(rgba(15, 32, 39, 0.3), rgba(32, 58, 67, 0.3)),
                 url('https://images.unsplash.com/photo-1503676260728-1c00da094a0b?q=80&w=1600');
     background-size: cover; background-position: center;
 }
 
-#homeCard {
-    width: 90%; max-width: 800px;
-    background: rgba(255, 255, 255, 0.2);
-    backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-    border-radius: 24px; padding: 60px 40px; text-align: center;
-    border: 1px solid rgba(255, 255, 255, 0.4);
-    box-shadow: var(--shadow-md); color: white; z-index: 10; 
+/* Redesigned Text Container */
+#homeContent {
+    width: 90%; max-width: 1000px;
+    text-align: center; color: white; z-index: 10;
+    margin-top: 15vh; /* Places text higher up */
 }
 
-#homeTitle { font-size: 64px; font-weight: 800; margin-bottom: 10px; text-shadow: 2px 2px 8px rgba(0,0,0,0.5); }
-#homeSubtitle { font-size: 24px; font-weight: 400; margin-bottom: 40px; text-shadow: 1px 1px 5px rgba(0,0,0,0.5); }
+/* Outlined Text for Visibility */
+#homeTitle { 
+    font-size: clamp(40px, 8vw, 90px); 
+    font-weight: 800; margin-bottom: 10px; 
+    -webkit-text-stroke: 3px #1e272e;
+    text-shadow: 4px 4px 15px rgba(0,0,0,0.8);
+    line-height: 1.1;
+}
 
+#homeSubtitle { 
+    font-size: clamp(20px, 4vw, 40px); 
+    font-weight: 800; margin-bottom: 40px; 
+    color: #ffde59;
+    -webkit-text-stroke: 1.5px #1e272e;
+    text-shadow: 2px 2px 10px rgba(0,0,0,0.8);
+}
+
+/* Button Anchored to Bottom */
 #enterBtn {
-    padding: 16px 50px; font-size: 22px; font-family: var(--primary-font); border: none;
-    border-radius: 50px; cursor: pointer; font-weight: 800; background: #ffcc00;
-    color: #333; box-shadow: 0 4px 15px rgba(255, 204, 0, 0.4); transition: all 0.3s ease;
+    position: absolute;
+    bottom: 12vh;
+    padding: 20px 70px; font-size: 32px; font-family: var(--primary-font); 
+    border: 5px solid #1e272e; border-radius: 50px; cursor: pointer; font-weight: 800; 
+    background: #ffcc00; color: #1e272e; 
+    box-shadow: 0 10px 0 #d4aa00, 0 15px 25px rgba(0,0,0,0.5); 
+    transition: all 0.1s ease; z-index: 10;
 }
-#enterBtn:hover { transform: translateY(-3px) scale(1.02); box-shadow: 0 8px 20px rgba(255, 204, 0, 0.6); }
+#enterBtn:active { 
+    transform: translateY(8px); 
+    box-shadow: 0 2px 0 #d4aa00, 0 5px 10px rgba(0,0,0,0.5); 
+}
 
 /* =========================
 GAME PAGE & HEADER
@@ -98,18 +118,17 @@ header {
 
 .controls { display: flex; gap: 8px; align-items: center; }
 .controls button, .controls select, .controls input {
-    padding: 8px 12px; border: 1px solid #e2e8f0; border-radius: 8px; cursor: pointer;
-    font-family: var(--primary-font); font-weight: 600; font-size: 13px;
-    background: white; transition: 0.2s; min-height: 44px;
+    padding: 8px 12px; border: 2px solid #e2e8f0; border-radius: 12px; cursor: pointer;
+    font-family: var(--primary-font); font-weight: 800; font-size: 14px;
+    background: white; transition: 0.1s; min-height: 44px;
 }
-.controls button:hover { background: #f8fafc; transform: translateY(-1px); }
+.controls button:active { transform: translateY(2px); }
 
-#startBtn { background: #4ade80; color: white; border: none; }
-#stopBtn { background: #f87171; color: white; border: none; }
-#viewBtn { background: #a855f7; color: white; border: none; }
-#resetBtn { background: #3b82f6; color: white; border: none; }
-#homeBtn { background: #f1f5f9; font-size: 18px; border: none; }
-#settingsBtn { background: #f1f5f9; font-size: 18px; border: none; }
+#startBtn { background: #4ade80; color: white; border-color: #22c55e;}
+#stopBtn { background: #f87171; color: white; border-color: #ef4444;}
+#viewBtn { background: #a855f7; color: white; border-color: #9333ea;}
+#resetBtn { background: #3b82f6; color: white; border-color: #2563eb;}
+#homeBtn, #settingsBtn { font-size: 18px; border-color: #cbd5e1; }
 
 /* =========================
 TEAMS AREA (AUTOFITTING GRID)
@@ -123,23 +142,23 @@ TEAMS AREA (AUTOFITTING GRID)
 .team {
     flex: 1 1 280px; min-width: 280px; background: var(--card-bg);
     border-radius: 16px; display: flex; flex-direction: column; overflow: hidden;
-    box-shadow: var(--shadow-sm); border: 1px solid #e2e8f0; height: 100%;
+    box-shadow: var(--shadow-sm); border: 2px solid #e2e8f0; height: 100%;
 }
 
 .teamHeader {
-    text-align: center; padding: 8px 12px; color: white; flex-shrink: 0;
+    text-align: center; padding: 10px 12px; color: white; flex-shrink: 0;
     display: flex; justify-content: space-between; align-items: center;
 }
 
-.teamTitle { font-size: 18px; font-weight: 800; display: flex; align-items: center; gap: 10px; }
-.score { font-size: 13px; font-weight: 600; background: rgba(255,255,255,0.3); padding: 4px 10px; border-radius: 10px; }
+.teamTitle { font-size: 20px; font-weight: 800; display: flex; align-items: center; gap: 10px; }
+.score { font-size: 15px; font-weight: 800; background: rgba(255,255,255,0.3); padding: 4px 12px; border-radius: 12px; }
 
 .teamCheckBtn {
-    background: white; color: #333; border: none; border-radius: 8px;
+    background: white; color: #333; border: 2px solid rgba(0,0,0,0.2); border-radius: 8px;
     padding: 6px 12px; font-family: inherit; font-weight: 800; cursor: pointer;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: transform 0.1s;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: 0.1s;
 }
-.teamCheckBtn:active { transform: scale(0.95); }
+.teamCheckBtn:active { transform: translateY(2px); box-shadow: none; }
 
 /* =========================
 DYNAMIC LAYOUT SIZING
@@ -153,7 +172,7 @@ DYNAMIC LAYOUT SIZING
     flex: 1; /* 50% split */
     background: #f1f5f9; padding: 10px; display: grid;
     grid-template-columns: repeat(auto-fill, minmax(65px, 1fr)); gap: 8px;
-    overflow-y: auto; border-top: 2px solid #e2e8f0; align-content: start;
+    overflow-y: auto; border-top: 3px solid #e2e8f0; align-content: start;
     transition: flex 0.4s cubic-bezier(0.4, 0, 0.2, 1); min-height: 0;
 }
 
@@ -167,16 +186,17 @@ DROP BOXES & GRID
 .dropBox {
     flex: 1; border-radius: 12px; padding: 10px; overflow-y: auto;
     background-color: #f8fafc; background-size: cover; background-position: center;
-    border: 2px dashed #cbd5e1; display: flex; flex-direction: column; transition: 0.2s ease;
+    border: 3px dashed #cbd5e1; display: flex; flex-direction: column; transition: 0.2s ease;
 }
 .dropBox.drag-over { background-color: #e2e8f0; border-color: #94a3b8; }
 .dropBox h2 {
-    text-align: center; margin-bottom: 8px; color: #333; background: rgba(255, 255, 255, 0.9);
-    padding: 5px; border-radius: 8px; font-size: 14px; font-weight: 800; flex-shrink: 0;
+    text-align: center; margin-bottom: 8px; color: #333; background: rgba(255, 255, 255, 0.95);
+    padding: 6px; border-radius: 8px; font-size: 16px; font-weight: 800; flex-shrink: 0;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05); text-transform: uppercase;
 }
 
 .itemGrid {
-    display: grid; grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(65px, 1fr));
     gap: 6px; width: 100%;
 }
 
@@ -185,20 +205,20 @@ ITEMS & HIDDEN LOGIC
 ========================= */
 .item {
     background: white; border-radius: 10px; padding: 6px 4px; text-align: center;
-    border: 1px solid #e2e8f0; box-shadow: 0 2px 4px rgba(0,0,0,0.05); display: flex;
-    flex-direction: column; align-items: center; justify-content: center; height: 70px;
+    border: 2px solid #e2e8f0; box-shadow: 0 2px 4px rgba(0,0,0,0.05); display: flex;
+    flex-direction: column; align-items: center; justify-content: center; height: 75px;
     width: 100%; touch-action: none; cursor: grab;
 }
-.item img { width: 35px; height: 35px; object-fit: contain; pointer-events: none; }
-.item span { display: block; margin-top: 4px; font-size: 10px; font-weight: 600; pointer-events: none; }
+.item img { width: 40px; height: 40px; object-fit: contain; pointer-events: none; }
+.item span { display: block; margin-top: 4px; font-size: 11px; font-weight: 800; pointer-events: none; }
 
 /* HIDES ITEMS IN DROPPED BOXES */
 .team.hidden-items .dropBox .item { display: none !important; }
 
 /* Dragging Ghost Overlay */
 .item.dragging-ghost {
-    position: fixed; z-index: 999999 !important; width: 75px !important; height: 75px !important;
-    pointer-events: none; box-shadow: 0 10px 20px rgba(0,0,0,0.15); transform: scale(1.05); opacity: 0.9;
+    position: fixed; z-index: 999999 !important; width: 80px !important; height: 80px !important;
+    pointer-events: none; box-shadow: 0 10px 20px rgba(0,0,0,0.15); transform: scale(1.1); opacity: 0.95;
 }
 
 .correct { outline: 4px solid #4ade80 !important; outline-offset: -2px; background: #f0fdf4 !important; }
@@ -209,36 +229,36 @@ ITEMS & HIDDEN LOGIC
 SETTINGS PANEL
 ========================= */
 #settingsPanel {
-    position: fixed; right: -450px; top: 0; width: 400px; max-width: 100%; height: 100vh;
+    position: fixed; right: -450px; top: 0; width: 420px; max-width: 100%; height: 100vh;
     background: white; transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1); overflow-y: auto;
-    padding: 30px; box-shadow: -10px 0 30px rgba(0,0,0,0.1); z-index: 999999;
+    padding: 30px; box-shadow: -10px 0 30px rgba(0,0,0,0.2); z-index: 999999;
 }
 #settingsPanel.active { right: 0; }
 
 #closeSettings {
-    position: absolute; top: 20px; right: 20px; width: 36px; height: 36px; border: none;
-    border-radius: 50%; background: #f1f5f9; font-size: 18px; cursor: pointer;
+    position: absolute; top: 20px; right: 20px; width: 40px; height: 40px; border: none;
+    border-radius: 50%; background: #f1f5f9; font-size: 20px; font-weight: 800; cursor: pointer;
 }
 #closeSettings:hover { background: #e2e8f0; color: red; }
 
 .settingGroup { margin-bottom: 25px; }
-.settingGroup h3 { margin-bottom: 12px; font-size: 15px; color: #475569; border-bottom: 2px solid #f1f5f9; padding-bottom: 5px; }
+.settingGroup h3 { margin-bottom: 12px; font-size: 16px; color: #475569; border-bottom: 2px solid #f1f5f9; padding-bottom: 5px; }
 .settingGroup input, .settingGroup select, .settingGroup button {
-    width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #cbd5e1;
-    border-radius: 8px; font-family: inherit; font-size: 13px; min-height: 40px;
+    width: 100%; padding: 12px; margin-bottom: 10px; border: 2px solid #cbd5e1;
+    border-radius: 8px; font-family: inherit; font-size: 14px; font-weight: 600; min-height: 40px;
 }
-.settingGroup button { cursor: pointer; font-weight: 600; background: #f8fafc; }
+.settingGroup button { cursor: pointer; font-weight: 800; background: #f8fafc; }
 .settingGroup button:hover { background: #e2e8f0; }
 
 .font-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 .font-grid select, .font-grid input { margin-bottom: 0; }
 
-#saveSettingsBtn { background: #3b82f6; color: white; border: none; padding: 12px; font-size: 14px;}
+#saveSettingsBtn { background: #3b82f6; color: white; border: none; font-size: 16px; border-radius: 12px;}
 #saveSettingsBtn:hover { background: #2563eb; }
 
-.itemEditor { border: 1px solid #e2e8f0; padding: 15px; border-radius: 12px; margin-bottom: 15px; background: #f8fafc; }
+.itemEditor { border: 2px solid #e2e8f0; padding: 15px; border-radius: 12px; margin-bottom: 15px; background: #f8fafc; }
 .itemEditor img { width: 50px; height: 50px; object-fit: contain; display: block; margin: 0 auto 10px auto; border-radius: 8px; background: white; padding: 5px; box-shadow: var(--shadow-sm); }
-.deleteItemBtn { background: #fee2e2 !important; color: #ef4444 !important; border: 1px solid #fca5a5 !important; }
+.deleteItemBtn { background: #fee2e2 !important; color: #ef4444 !important; border-color: #fca5a5 !important; }
 
 ::-webkit-scrollbar { width: 8px; height: 8px; }
 ::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 4px; }
@@ -252,11 +272,11 @@ SETTINGS PANEL
     <video id="homeVideoBg" class="home-bg-layer" autoplay loop muted playsinline></video>
     <div id="homeImageBg" class="home-bg-layer"></div>
 
-    <div id="homeCard">
+    <div id="homeContent">
         <h1 id="homeTitle">Needs vs Wants</h1>
         <p id="homeSubtitle">Fun Classroom Sorting Competition</p>
-        <button id="enterBtn">START GAME</button>
     </div>
+    <button id="enterBtn">START GAME</button>
 </div>
 
 <!-- GAME PAGE -->
@@ -273,10 +293,10 @@ SETTINGS PANEL
                 <option>1</option><option>2</option><option>3</option>
                 <option>4</option><option>5</option><option selected>6</option>
             </select>
-            <input type="number" id="timerInput" value="60" style="width:60px;" title="Seconds">
+            <input type="number" id="timerInput" value="60" style="width:70px;" title="Seconds">
             <button id="startBtn">START</button>
             <button id="stopBtn">STOP</button>
-            <button id="viewBtn">👁️ VIEW ALL</button>
+            <button id="viewBtn" title="Expand layout & reveal all">👁️ VIEW ALL</button>
             <button id="resetBtn">🔄 RESET</button>
             <button id="homeBtn" title="Home">🏠</button>
             <button id="settingsBtn" title="Settings">⚙️</button>
@@ -357,9 +377,9 @@ SETTINGS PANEL
 
     <div class="settingGroup">
         <h3>Data Management</h3>
-        <button id="exportBtn">EXPORT JSON</button>
+        <button id="exportBtn" style="background:#8e44ad; color:white;">💾 EXPORT JSON</button>
         <input type="file" id="importInput" accept=".json" style="display:none;">
-        <button onclick="document.getElementById('importInput').click()">IMPORT JSON</button>
+        <button onclick="document.getElementById('importInput').click()">📂 IMPORT JSON</button>
     </div>
 </div>
 
@@ -379,13 +399,13 @@ function playSound(isCorrect) {
         osc.type = 'sine';
         osc.frequency.setValueAtTime(587.33, audioContext.currentTime); 
         osc.frequency.setValueAtTime(880, audioContext.currentTime + 0.1); 
-        gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+        gainNode.gain.setValueAtTime(0.15, audioContext.currentTime);
         gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
     } else {
         osc.type = 'sawtooth';
         osc.frequency.setValueAtTime(180, audioContext.currentTime);
         osc.frequency.linearRampToValueAtTime(120, audioContext.currentTime + 0.25);
-        gainNode.gain.setValueAtTime(0.15, audioContext.currentTime);
+        gainNode.gain.setValueAtTime(0.2, audioContext.currentTime);
         gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.25);
     }
     osc.start(); osc.stop(audioContext.currentTime + 0.3);
@@ -396,14 +416,14 @@ SETTINGS & DATA
 ========================= */
 let settings = {
     homeBgType: "default", homeBgData: "",
-    homeTitle: "Needs vs Wants", homeSubtitle: "Fun Classroom Sorting Competition",
-    homeFontFamily: "'Poppins', Arial", homeTitleSize: "64", homeSubtitleSize: "24", homeFontColor: "#ffffff",
+    homeTitle: "Needs vs Wants", homeSubtitle: "Classroom Sorting Competition",
+    homeFontFamily: "'Poppins', Arial", homeTitleSize: "90", homeSubtitleSize: "40", homeFontColor: "#ffffff",
     gameTitle: "Needs vs Wants", gameTitleFont: "'Poppins', Arial", gameTitleSize: "28", gameTitleColor: "#333333",
     fontFamily: "'Poppins', Arial", fontSize: "14", fontColor: "#333333",
     needsText: "NEEDS", wantsText: "WANTS", needsBg: "", wantsBg: ""
 };
 
-const teamColors = ["#ff7675", "#74b9ff", "#55efc4", "#ffeaa7", "#a29bfe", "#fd79a8"];
+const teamColors = ["#ff4757", "#2e86de", "#10ac84", "#feca57", "#5f27cd", "#ff9f43"];
 
 let items = [
     { name: "Food", category: "needs", image: "https://cdn-icons-png.flaticon.com/512/1046/1046784.png" },
@@ -432,7 +452,7 @@ function createTeams() {
     for(let i=1; i<=count; i++) {
         const teamColor = teamColors[(i-1) % teamColors.length];
         const team = document.createElement("div");
-        // Apply hidden class by default
+        // Hidden items by default to prevent other teams from peeking
         team.className = "team hidden-items"; 
         team.dataset.team = i; 
         
@@ -487,12 +507,14 @@ function setupPointerEvents(itemEl) {
 
         ghostEl = itemEl.cloneNode(true);
         ghostEl.className = 'item dragging-ghost';
-        // Always show graphic during drag
-        ghostEl.style.display = 'flex';
+        // Force display of internal content on ghost even if dragging from a hidden box
+        const spans = ghostEl.querySelectorAll('span, img');
+        spans.forEach(s => s.style.display = 'block');
+        
         document.body.appendChild(ghostEl);
-
         moveGhost(e.clientX, e.clientY);
-        function moveGhost(x, y) { ghostEl.style.left = `${x - 37.5}px`; ghostEl.style.top = `${y - 37.5}px`; }
+
+        function moveGhost(x, y) { ghostEl.style.left = `${x - 40}px`; ghostEl.style.top = `${y - 40}px`; }
 
         function onPointerMove(ev) {
             moveGhost(ev.clientX, ev.clientY);
@@ -557,7 +579,7 @@ function applyHomeBackground() {
     const videoBg = document.getElementById("homeVideoBg"); const imageBg = document.getElementById("homeImageBg");
     if (settings.homeBgType === 'video') { videoBg.src = settings.homeBgData; videoBg.style.display = 'block'; imageBg.style.display = 'none';
     } else if (settings.homeBgType === 'image') { videoBg.style.display = 'none'; imageBg.style.display = 'block'; imageBg.style.backgroundImage = `url('${settings.homeBgData}')`;
-    } else { videoBg.style.display = 'none'; imageBg.style.display = 'block'; imageBg.style.backgroundImage = `linear-gradient(rgba(15, 32, 39, 0.7), rgba(32, 58, 67, 0.7), rgba(44, 83, 100, 0.7)), url('https://images.unsplash.com/photo-1503676260728-1c00da094a0b?q=80&w=1600')`; }
+    } else { videoBg.style.display = 'none'; imageBg.style.display = 'block'; imageBg.style.backgroundImage = `linear-gradient(rgba(15, 32, 39, 0.3), rgba(32, 58, 67, 0.3)), url('https://images.unsplash.com/photo-1503676260728-1c00da094a0b?q=80&w=1600')`; }
 }
 
 /* =========================
@@ -568,7 +590,7 @@ document.getElementById("viewBtn").addEventListener("click", () => {
     const container = document.getElementById("teamsContainer");
     isExpanded = !isExpanded;
     
-    // Toggle Layout Expansion
+    // Toggle Layout Expansion (Makes boxes big, pool small)
     if(isExpanded) container.classList.add("view-expanded");
     else container.classList.remove("view-expanded");
 
@@ -587,7 +609,7 @@ function checkTeam(teamId) {
     container.classList.add("view-expanded");
     isExpanded = true;
     
-    // Reveal items for this team specifically
+    // Reveal items for this specific team
     team.classList.remove("hidden-items");
 
     let score = 0; let totalWrong = 0;
