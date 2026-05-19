@@ -96,6 +96,23 @@ HOME PAGE & BACKGROUNDS
 }
 #enterBtn:active { transform: translateY(8px); box-shadow: 0 2px 0 #d4aa00, 0 5px 10px rgba(0,0,0,0.5); }
 
+/* Moved Settings Button to Homepage */
+#settingsBtn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    font-size: 24px;
+    background: white;
+    border: 2px solid #cbd5e1;
+    border-radius: 12px;
+    padding: 8px 12px;
+    cursor: pointer;
+    z-index: 9999999;
+    box-shadow: var(--shadow-sm);
+    transition: 0.1s;
+}
+#settingsBtn:active { transform: translateY(2px); }
+
 /* =========================
 GAME PAGE & HEADER
 ========================= */
@@ -128,7 +145,7 @@ header {
 #stopBtn { background: #f87171; color: white; border-color: #ef4444;}
 #viewBtn { background: #a855f7; color: white; border-color: #9333ea;}
 #resetBtn { background: #3b82f6; color: white; border-color: #2563eb;}
-#homeBtn, #settingsBtn { font-size: 18px; border-color: #cbd5e1; }
+#homeBtn { font-size: 18px; border-color: #cbd5e1; }
 
 /* =========================
 TEAMS AREA
@@ -213,6 +230,9 @@ ITEMS & HIDDEN LOGIC
 
 .team.hidden-items .dropBox .item { display: none !important; }
 
+/* Hide items globally before timer starts */
+#teamsContainer.game-not-started .item { display: none !important; }
+
 .item.dragging-ghost {
     position: fixed; z-index: 999999 !important; width: 80px !important; height: 80px !important;
     pointer-events: none; box-shadow: 0 10px 20px rgba(0,0,0,0.15); transform: scale(1.1); opacity: 0.95;
@@ -228,7 +248,7 @@ SETTINGS PANEL
 #settingsPanel {
     position: fixed; right: -450px; top: 0; width: 420px; max-width: 100%; height: 100vh;
     background: white; transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1); overflow-y: auto;
-    padding: 30px; box-shadow: -10px 0 30px rgba(0,0,0,0.2); z-index: 999999;
+    padding: 30px; box-shadow: -10px 0 30px rgba(0,0,0,0.2); z-index: 9999999;
 }
 #settingsPanel.active { right: 0; }
 
@@ -266,6 +286,9 @@ SETTINGS PANEL
 
 <!-- HOME PAGE -->
 <div id="homePage">
+    <!-- Settings button relocated here -->
+    <button id="settingsBtn" title="Settings">⚙️</button>
+
     <video id="homeVideoBg" class="home-bg-layer" autoplay loop muted playsinline></video>
     <div id="homeImageBg" class="home-bg-layer"></div>
 
@@ -296,7 +319,6 @@ SETTINGS PANEL
             <button id="viewBtn" title="Expand layout & reveal all">👁️ VIEW ALL</button>
             <button id="resetBtn">🔄 RESET</button>
             <button id="homeBtn" title="Home">🏠</button>
-            <button id="settingsBtn" title="Settings">⚙️</button>
         </div>
     </header>
 
@@ -469,6 +491,7 @@ function createTeams() {
     const container = document.getElementById("teamsContainer");
     container.innerHTML = "";
     container.classList.remove('view-expanded'); // Reset view mode
+    container.classList.add('game-not-started'); // Hide items before start is clicked
     const count = parseInt(document.getElementById("teamCount").value);
 
     for(let i=1; i<=count; i++) {
@@ -681,6 +704,9 @@ document.getElementById("enterBtn").addEventListener("click", () => {
 
 let timerInterval;
 document.getElementById("startBtn").addEventListener("click", () => {
+    // Reveal items when the start button is clicked
+    document.getElementById("teamsContainer").classList.remove('game-not-started');
+    
     clearInterval(timerInterval);
     let time = parseInt(document.getElementById("timerInput").value); updateTimerDisplay(time);
     timerInterval = setInterval(() => { time--; updateTimerDisplay(time); if(time <= 0) { clearInterval(timerInterval); setTimeout(() => alert("TIME IS UP!"), 100); } }, 1000);
