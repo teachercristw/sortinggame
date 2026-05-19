@@ -410,16 +410,18 @@ SETTINGS PANEL
     </div>
 
     <div class="settingGroup">
-        <h3>Items Editor</h3>
-        <div id="itemsEditor"></div>
-        <button id="addItemBtn" style="background:#2ecc71; color:white;">+ ADD ITEM</button>
-    </div>
-
-    <div class="settingGroup">
         <h3>Data Management</h3>
         <button id="exportBtn" style="background:#8e44ad; color:white;">💾 EXPORT JSON</button>
         <input type="file" id="importInput" accept=".json" style="display:none;">
-        <button onclick="document.getElementById('importInput').click()">📂 IMPORT JSON</button>
+        <button onclick="document.getElementById('importInput').click()">📂 IMPORT LOCAL JSON</button>
+        <!-- NEW GITHUB FETCH BUTTON -->
+        <button id="fetchGithubBtn" style="background:#f39c12; color:white; margin-top:10px;">☁️ FETCH GITHUB BACKUP</button>
+    </div>
+
+    <div class="settingGroup">
+        <h3>Items Editor</h3>
+        <div id="itemsEditor"></div>
+        <button id="addItemBtn" style="background:#2ecc71; color:white;">+ ADD ITEM</button>
     </div>
 </div>
 
@@ -454,6 +456,9 @@ function playSound(isCorrect) {
 /* =========================
 SETTINGS & DATA
 ========================= */
+// ⬇️ Replace this link with the "Raw" URL to your JSON file on GitHub! ⬇️
+const GITHUB_JSON_URL = "https://raw.githubusercontent.com/YOUR_USERNAME/YOUR_REPO/main/sort.json";
+
 let settings = {
     homeBgType: "video", 
     homeBgData: "sort.mp4", // Defaults to the MP4 file on your GitHub repository
@@ -818,7 +823,6 @@ function renderItemsEditor() {
         editor.appendChild(div);
     });
 }
-renderItemsEditor(); createTeams();
 
 document.getElementById("addItemBtn").addEventListener("click", () => { items.push({ name: "New Item", category: "needs", image: "https://cdn-icons-png.flaticon.com/512/992/992651.png" }); renderItemsEditor(); createTeams(); });
 
@@ -832,11 +836,52 @@ document.getElementById("importInput").addEventListener("change", (e) => {
         try {
             const d = JSON.parse(ev.target.result); settings = d.settings || settings; items = d.items || items;
             document.getElementById("homeTitle").innerText = settings.homeTitle; document.getElementById("homeSubtitle").innerText = settings.homeSubtitle; document.getElementById("gameTitle").innerText = settings.gameTitle;
-            createTeams(); renderItemsEditor(); alert("Game Imported!");
+            createTeams(); renderItemsEditor(); alert("Game Imported Successfully!");
         } catch(err) { alert("Error importing file."); }
     }; r.readAsText(f);
 });
 document.getElementById("teamCount").addEventListener("change", createTeams);
+
+
+/* =========================
+GITHUB FETCH LOGIC
+========================= */
+async function fetchFromGithub(isAutoLoad = false) {
+    if (!GITHUB_JSON_URL || GITHUB_JSON_URL.includes("YOUR_USERNAME")) {
+        if (!isAutoLoad) alert("Please update the GITHUB_JSON_URL inside the code first!");
+        renderItemsEditor(); createTeams(); // Load defaults if URL isn't set yet
+        return;
+    }
+
+    try {
+        const response = await fetch(GITHUB_JSON_URL);
+        if (!response.ok) throw new Error("Network response was not ok");
+        const data = await response.json();
+        
+        settings = data.settings || settings;
+        items = data.items || items;
+        
+        document.getElementById("homeTitle").innerText = settings.homeTitle; 
+        document.getElementById("homeSubtitle").innerText = settings.homeSubtitle; 
+        document.getElementById("gameTitle").innerText = settings.gameTitle;
+        
+        renderItemsEditor();
+        createTeams();
+        
+        if (!isAutoLoad) alert("GitHub Backup Loaded Successfully!");
+    } catch (error) {
+        console.error("Error fetching from GitHub:", error);
+        if (!isAutoLoad) alert("Could not fetch the backup. Make sure the GitHub Raw URL is correct and the repo is public.");
+        renderItemsEditor(); createTeams(); // Fallback to defaults if fetch fails
+    }
+}
+
+// Bind the manual button
+document.getElementById("fetchGithubBtn").addEventListener("click", () => fetchFromGithub(false));
+
+// Automatically attempt to fetch quietly when the page first loads
+fetchFromGithub(true);
+
 </script>
 </body>
 </html>
