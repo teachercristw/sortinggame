@@ -96,7 +96,6 @@ HOME PAGE & BACKGROUNDS
 }
 #enterBtn:active { transform: translateY(8px); box-shadow: 0 2px 0 #d4aa00, 0 5px 10px rgba(0,0,0,0.5); }
 
-/* Moved Settings Button to Homepage */
 #settingsBtn {
     position: absolute;
     top: 20px;
@@ -148,18 +147,29 @@ header {
 #homeBtn { font-size: 18px; border-color: #cbd5e1; }
 
 /* =========================
-TEAMS AREA
+TEAMS AREA - SMART GRID LAYOUT
 ========================= */
 #teamsContainer {
-    display: flex; width: 100vw; height: calc(100vh - 75px);
-    gap: 15px; padding: 15px; overflow-x: auto; overflow-y: hidden;
+    display: grid; 
+    width: 100vw; height: calc(100vh - 75px);
+    gap: 15px; padding: 15px; 
+    overflow-x: hidden; overflow-y: auto;
     background: var(--bg-color); transition: all 0.3s ease;
 }
 
+/* Dynamic Grid based on team count */
+#teamsContainer[data-teams="1"] { grid-template-columns: 1fr; }
+#teamsContainer[data-teams="2"] { grid-template-columns: 1fr 1fr; }
+#teamsContainer[data-teams="3"] { grid-template-columns: repeat(3, 1fr); }
+#teamsContainer[data-teams="4"] { grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; }
+#teamsContainer[data-teams="5"] { grid-template-columns: repeat(3, 1fr); grid-template-rows: 1fr 1fr; } 
+#teamsContainer[data-teams="6"] { grid-template-columns: repeat(3, 1fr); grid-template-rows: 1fr 1fr; }
+
 .team {
-    flex: 1 1 280px; min-width: 280px; background: var(--card-bg);
-    border-radius: 16px; display: flex; flex-direction: column; overflow: hidden;
+    background: var(--card-bg); border-radius: 16px; 
+    display: flex; flex-direction: column; overflow: hidden;
     box-shadow: var(--shadow-sm); border: 2px solid #e2e8f0; height: 100%;
+    min-height: 250px;
 }
 
 .teamHeader {
@@ -190,6 +200,7 @@ DYNAMIC LAYOUT SIZING
     background: #f1f5f9; padding: 10px; display: grid;
     grid-template-columns: repeat(auto-fill, minmax(65px, 1fr)); gap: 8px;
     overflow-y: auto; border-top: 3px solid #e2e8f0; align-content: start;
+    justify-content: center; /* Forces items to center instead of aligning left */
     transition: flex 0.4s cubic-bezier(0.4, 0, 0.2, 1); min-height: 0;
 }
 
@@ -214,6 +225,7 @@ DROP BOXES & GRID
 .itemGrid {
     display: grid; grid-template-columns: repeat(auto-fill, minmax(65px, 1fr));
     gap: 6px; width: 100%;
+    justify-content: center; /* Forces items in drop boxes to center */
 }
 
 /* =========================
@@ -223,19 +235,40 @@ ITEMS & HIDDEN LOGIC
     background: white; border-radius: 10px; padding: 6px 4px; text-align: center;
     border: 2px solid #e2e8f0; box-shadow: 0 2px 4px rgba(0,0,0,0.05); display: flex;
     flex-direction: column; align-items: center; justify-content: center; height: 75px;
-    width: 100%; touch-action: none; cursor: grab;
+    width: 100%; touch-action: none; cursor: grab; transition: all 0.2s ease;
 }
-.item img { width: 40px; height: 40px; object-fit: contain; pointer-events: none; }
-.item span { display: block; margin-top: 4px; font-size: 11px; font-weight: 800; pointer-events: none; }
+.item img { width: 40px; height: 40px; object-fit: contain; pointer-events: none; transition: all 0.2s ease;}
+.item span { display: block; margin-top: 4px; font-size: 11px; font-weight: 800; pointer-events: none; transition: all 0.2s ease;}
+
+/* Dynamic scaling when 1 to 3 teams are selected */
+#teamsContainer[data-teams="1"] .itemPool, #teamsContainer[data-teams="1"] .itemGrid,
+#teamsContainer[data-teams="2"] .itemPool, #teamsContainer[data-teams="2"] .itemGrid,
+#teamsContainer[data-teams="3"] .itemPool, #teamsContainer[data-teams="3"] .itemGrid {
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 15px;
+}
+#teamsContainer[data-teams="1"] .item, 
+#teamsContainer[data-teams="2"] .item, 
+#teamsContainer[data-teams="3"] .item { 
+    height: 130px; 
+}
+#teamsContainer[data-teams="1"] .item img, 
+#teamsContainer[data-teams="2"] .item img, 
+#teamsContainer[data-teams="3"] .item img { 
+    width: 80px; height: 80px; 
+}
+#teamsContainer[data-teams="1"] .item span, 
+#teamsContainer[data-teams="2"] .item span, 
+#teamsContainer[data-teams="3"] .item span { 
+    font-size: 16px; margin-top: 10px; 
+}
 
 .team.hidden-items .dropBox .item { display: none !important; }
-
-/* Hide items globally before timer starts */
 #teamsContainer.game-not-started .item { display: none !important; }
 
 .item.dragging-ghost {
-    position: fixed; z-index: 999999 !important; width: 80px !important; height: 80px !important;
-    pointer-events: none; box-shadow: 0 10px 20px rgba(0,0,0,0.15); transform: scale(1.1); opacity: 0.95;
+    position: fixed; z-index: 999999 !important; pointer-events: none; 
+    box-shadow: 0 10px 20px rgba(0,0,0,0.15); transform: scale(1.15); opacity: 0.95;
 }
 
 .correct { outline: 4px solid #4ade80 !important; outline-offset: -2px; background: #f0fdf4 !important; }
@@ -286,12 +319,9 @@ SETTINGS PANEL
 
 <!-- HOME PAGE -->
 <div id="homePage">
-    <!-- Settings button relocated here -->
     <button id="settingsBtn" title="Settings">⚙️</button>
-
     <video id="homeVideoBg" class="home-bg-layer" autoplay loop muted playsinline></video>
     <div id="homeImageBg" class="home-bg-layer"></div>
-
     <div id="homeContent">
         <h1 id="homeTitle">Needs or Wants?</h1>
         <p id="homeSubtitle">Teacher Cris' Sorting Challenge</p>
@@ -305,9 +335,7 @@ SETTINGS PANEL
         <div class="leftHeader">
             <h1 id="gameTitle">Needs vs Wants</h1>
         </div>
-        
         <div id="topTimer">01:00</div>
-        
         <div class="controls">
             <select id="teamCount" title="Number of Teams">
                 <option>1</option><option>2</option><option>3</option>
@@ -321,7 +349,6 @@ SETTINGS PANEL
             <button id="homeBtn" title="Home">🏠</button>
         </div>
     </header>
-
     <div id="teamsContainer"></div>
 </div>
 
@@ -414,7 +441,6 @@ SETTINGS PANEL
         <button id="exportBtn" style="background:#8e44ad; color:white;">💾 EXPORT JSON</button>
         <input type="file" id="importInput" accept=".json" style="display:none;">
         <button onclick="document.getElementById('importInput').click()">📂 IMPORT LOCAL JSON</button>
-        <!-- NEW GITHUB FETCH BUTTON -->
         <button id="fetchGithubBtn" style="background:#f39c12; color:white; margin-top:10px;">☁️ FETCH GITHUB BACKUP</button>
     </div>
 
@@ -456,12 +482,11 @@ function playSound(isCorrect) {
 /* =========================
 SETTINGS & DATA
 ========================= */
-// ⬇️ Replace this link with the "Raw" URL to your JSON file on GitHub! ⬇️
 const GITHUB_JSON_URL = "https://raw.githubusercontent.com/teachercristw/sortinggame/refs/heads/main/sort.json";
 
 let settings = {
     homeBgType: "video", 
-    homeBgData: "sort.mp4", // Defaults to the MP4 file on your GitHub repository
+    homeBgData: "sort.mp4", 
     homeTitle: "Needs or Wants?", homeSubtitle: "Teacher Cris' Sorting Challenge",
     homeFontFamily: "'Poppins', 'Century Gothic', Arial", 
     homeTitleSize: "90", homeSubtitleSize: "40", homeFontColor: "#ffffff",
@@ -495,14 +520,15 @@ CORE LOGIC & UNIVERSAL TOUCH DRAG
 function createTeams() {
     const container = document.getElementById("teamsContainer");
     container.innerHTML = "";
-    container.classList.remove('view-expanded'); // Reset view mode
-    container.classList.add('game-not-started'); // Hide items before start is clicked
+    container.classList.remove('view-expanded');
+    container.classList.add('game-not-started'); 
+    
     const count = parseInt(document.getElementById("teamCount").value);
+    container.setAttribute("data-teams", count); // Triggers dynamic grid & scaling
 
     for(let i=1; i<=count; i++) {
         const teamColor = teamColors[(i-1) % teamColors.length];
         const team = document.createElement("div");
-        // Hidden items by default to prevent other teams from peeking
         team.className = "team hidden-items"; 
         team.dataset.team = i; 
         
@@ -545,28 +571,39 @@ function createTeams() {
 }
 
 function setupPointerEvents(itemEl) {
-    let ghostEl = null, startParent = null, currentOverBox = null;
-
     itemEl.addEventListener('pointerdown', (e) => {
         e.preventDefault();
-        itemEl.releasePointerCapture(e.pointerId); 
+        
+        // Prevent multiple fingers dragging the same exact element simultaneously 
+        if(itemEl.dataset.isDragging) return;
+        itemEl.dataset.isDragging = "true";
+        
         if (audioContext.state === 'suspended') audioContext.resume();
 
-        startParent = itemEl.parentElement;
+        const pointerId = e.pointerId; // Isolate this specific finger/stylus
+        let ghostEl = null, startParent = itemEl.parentElement, currentOverBox = null;
+        
+        // Set drag visual properties based on dynamic sizing attributes
+        const rect = itemEl.getBoundingClientRect();
+        
         itemEl.style.visibility = 'hidden';
 
         ghostEl = itemEl.cloneNode(true);
         ghostEl.className = 'item dragging-ghost';
-        // Force display of internal content on ghost even if dragging from a hidden box
+        ghostEl.style.width = `${rect.width}px`;
+        ghostEl.style.height = `${rect.height}px`;
+
         const spans = ghostEl.querySelectorAll('span, img');
         spans.forEach(s => s.style.display = 'block');
         
         document.body.appendChild(ghostEl);
         moveGhost(e.clientX, e.clientY);
 
-        function moveGhost(x, y) { ghostEl.style.left = `${x - 40}px`; ghostEl.style.top = `${y - 40}px`; }
+        function moveGhost(x, y) { ghostEl.style.left = `${x - (rect.width/2)}px`; ghostEl.style.top = `${y - (rect.height/2)}px`; }
 
         function onPointerMove(ev) {
+            if(ev.pointerId !== pointerId) return; // Ignore other concurrent touches
+            
             moveGhost(ev.clientX, ev.clientY);
             ghostEl.style.visibility = 'hidden';
             let target = document.elementFromPoint(ev.clientX, ev.clientY);
@@ -575,7 +612,7 @@ function setupPointerEvents(itemEl) {
             if (!target) return;
             let targetBox = target.closest('.dropBox') || target.closest('.itemPool');
             
-            if (currentOverBox) currentOverBox.classList.remove('drag-over');
+            if (currentOverBox && currentOverBox !== targetBox) currentOverBox.classList.remove('drag-over');
 
             if (targetBox) {
                 let boxTeam = targetBox.closest('.team').dataset.team;
@@ -589,8 +626,13 @@ function setupPointerEvents(itemEl) {
         }
 
         function onPointerUp(ev) {
+            if(ev.pointerId !== pointerId) return; // Ignore other concurrent touches
+            
             window.removeEventListener('pointermove', onPointerMove);
             window.removeEventListener('pointerup', onPointerUp);
+            window.removeEventListener('pointercancel', onPointerUp);
+            
+            delete itemEl.dataset.isDragging;
 
             if (currentOverBox) {
                 currentOverBox.classList.remove('drag-over');
@@ -604,8 +646,10 @@ function setupPointerEvents(itemEl) {
             if (ghostEl) { ghostEl.remove(); ghostEl = null; }
             currentOverBox = null;
         }
+        
         window.addEventListener('pointermove', onPointerMove);
         window.addEventListener('pointerup', onPointerUp);
+        window.addEventListener('pointercancel', onPointerUp);
     });
 }
 
@@ -652,11 +696,9 @@ document.getElementById("viewBtn").addEventListener("click", () => {
     const container = document.getElementById("teamsContainer");
     isExpanded = !isExpanded;
     
-    // Toggle Layout Expansion (Makes boxes big, pool small)
     if(isExpanded) container.classList.add("view-expanded");
     else container.classList.remove("view-expanded");
 
-    // Reveal hidden items globally
     document.querySelectorAll(".team").forEach(team => {
         if(isExpanded) team.classList.remove("hidden-items");
         else team.classList.add("hidden-items");
@@ -667,11 +709,9 @@ function checkTeam(teamId) {
     const team = document.querySelector(`.team[data-team="${teamId}"]`);
     const container = document.getElementById("teamsContainer");
     
-    // Auto-Expand layout to see better
     container.classList.add("view-expanded");
     isExpanded = true;
     
-    // Reveal items for this specific team
     team.classList.remove("hidden-items");
 
     let score = 0; let totalWrong = 0;
@@ -709,7 +749,6 @@ document.getElementById("enterBtn").addEventListener("click", () => {
 
 let timerInterval;
 document.getElementById("startBtn").addEventListener("click", () => {
-    // Reveal items when the start button is clicked
     document.getElementById("teamsContainer").classList.remove('game-not-started');
     
     clearInterval(timerInterval);
@@ -731,7 +770,6 @@ SETTINGS PANEL
 document.getElementById("settingsBtn").addEventListener("click", () => {
     document.getElementById("settingsPanel").classList.add("active");
     
-    // Populate form with current settings
     document.getElementById("homeTitleInput").value = settings.homeTitle;
     document.getElementById("homeSubtitleInput").value = settings.homeSubtitle;
     document.getElementById("homeFontFamily").value = settings.homeFontFamily;
@@ -849,7 +887,7 @@ GITHUB FETCH LOGIC
 async function fetchFromGithub(isAutoLoad = false) {
     if (!GITHUB_JSON_URL || GITHUB_JSON_URL.includes("YOUR_USERNAME")) {
         if (!isAutoLoad) alert("Please update the GITHUB_JSON_URL inside the code first!");
-        renderItemsEditor(); createTeams(); // Load defaults if URL isn't set yet
+        renderItemsEditor(); createTeams(); 
         return;
     }
 
@@ -872,14 +910,11 @@ async function fetchFromGithub(isAutoLoad = false) {
     } catch (error) {
         console.error("Error fetching from GitHub:", error);
         if (!isAutoLoad) alert("Could not fetch the backup. Make sure the GitHub Raw URL is correct and the repo is public.");
-        renderItemsEditor(); createTeams(); // Fallback to defaults if fetch fails
+        renderItemsEditor(); createTeams(); 
     }
 }
 
-// Bind the manual button
 document.getElementById("fetchGithubBtn").addEventListener("click", () => fetchFromGithub(false));
-
-// Automatically attempt to fetch quietly when the page first loads
 fetchFromGithub(true);
 
 </script>
